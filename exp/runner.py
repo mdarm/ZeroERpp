@@ -18,8 +18,9 @@ from sqlalchemy.engine import make_url
 
 from exp.config import BENCH_DIR, MATCHING_STORAGE, STORAGE
 from utils.decisions import decision_rows, threshold_curve
-from models.matcher import ZeroERMatcher
-from data.features.panels import PanelTransform, load_cell, record_disjoint_splits
+from models.estimator import ZeroEREstimator, prepare_panel
+from training.unsupervised import fit_and_score, marginal_nll, observed_blocks
+from data.features.panels import load_cell, record_disjoint_splits
 
 
 def _json(value):
@@ -35,7 +36,8 @@ def _code_hash():
     return sha256(b"".join((root / name).read_bytes() for name in (
         "exp/runner.py", "data/features/panels.py", "data/features/embeddings.py",
         "data/features/bank.py", "utils/decisions.py",
-        "models/zeroer.py", "models/matcher.py"))).hexdigest()
+        "models/zeroer.py", "models/matcher.py", "models/estimator.py",
+        "training/unsupervised.py"))).hexdigest()
 
 
 def _database(storage):
@@ -83,69 +85,17 @@ def _distributions(configs):
 
 
 def _prepare(cell, panel, train, validation):
-    start = perf_counter()
-    attributes = [a for a in (panel.get("attributes") or cell["attributes"]) if a != "record"]
-    transformer = PanelTransform(panel["models"], attributes,
-                                 fusion=panel.get("fusion", "separate"),
-                                 metrics=panel.get("metrics", ["cos"]))
-    transformer.fit(cell["bank"].iloc[train], cell["present"].iloc[train])
-    x_train = transformer.transform(cell["bank"].iloc[train], cell["present"].iloc[train])
-    x_valid = transformer.transform(cell["bank"].iloc[validation], cell["present"].iloc[validation])
-    return x_train, x_valid, perf_counter() - start
+    """Compatibility wrapper for the publication timing runtime."""
+    _, x_train, x_valid, seconds = prepare_panel(cell, panel, train, validation)
+    return x_train, x_valid, seconds
 
 
 def _observed(present, columns):
-    blocks = list(dict.fromkeys(name.split("_")[0] for name in columns))
-    return present[blocks].to_numpy(dtype=bool), blocks
-
-
-def _diagnostics(matcher, scores, present, columns):
-    observed, blocks = _observed(present, columns)
-    predicted = np.asarray(scores["p_match"]) >= .5
-    strata, missingness = [], []
-    nll = -np.asarray(scores["log_density"])
-    for count in np.unique(observed.sum(axis=1)):
-        keep = observed.sum(axis=1) == count
-        strata.append(dict(n_blocks=int(count), n=int(keep.sum()),
-                           nll_sum=float(nll[keep].sum()), nll=float(nll[keep].mean())))
-    for i, block in enumerate(blocks):
-        mask = observed[:, i]
-        a, b = int((predicted & mask).sum()), int((predicted & ~mask).sum())
-        c, d = int((~predicted & mask).sum()), int((~predicted & ~mask).sum())
-        denom = float((a + b) * (c + d) * (a + c) * (b + d)) ** .5
-        missingness.append(dict(attribute=block, present=int(mask.sum()), n=len(mask),
-                                predicted_present=a, predicted_absent=b,
-                                phi=(a * d - b * c) / denom if denom else None))
-    model = matcher.model
-    informed = observed.any(axis=1)
-    order = {block: float(np.mean(np.asarray(model.Mu_M)[[j for j, c in enumerate(columns)
-                        if c.split("_")[0] == block]] - np.asarray(model.Mu_U)[[j for j, c in enumerate(columns)
-                        if c.split("_")[0] == block]])) for block in blocks}
-    return dict(pi=float(scores["pi"]), init_fraction=float(np.mean(model.y)),
-                converged=bool(model.converged), n_iter=int(model.n_iter),
-                kappa_capped=float(np.mean(np.asarray(model.kappas) >= 1)),
-                n_features=len(columns), feature_names=list(columns),
-                n_no_features=int((observed.sum(axis=1) == 0).sum()),
-                n_informative=int(informed.sum()),
-                informative_nll=float(nll[informed].mean()) if informed.any() else None,
-                component_mean_difference=order, presence_strata=strata, missingness=missingness)
+    return observed_blocks(present, columns)
 
 
 def _fit(config, pairs, x_train, present_train, x_valid, present_valid):
-    start = perf_counter()
-    matcher = ZeroERMatcher(**config)
-    matcher.match_pairs(pairs, x_train, present=present_train)
-    fit_seconds = perf_counter() - start
-    start = perf_counter()
-    scores = matcher.model.score_components(x_valid.to_numpy(), present=present_valid)
-    if not np.isfinite(scores["log_density"]).all():
-        raise ValueError("Non-finite validation log density")
-    if not 0 < scores["pi"] < 1:
-        raise ValueError("Mixture collapsed to a single component")
-    score_seconds = perf_counter() - start
-    attrs = _diagnostics(matcher, scores, present_valid, x_train.columns)
-    attrs.update(fit_seconds=fit_seconds, score_seconds=score_seconds)
-    return matcher, scores, attrs
+    return fit_and_score(config, pairs, x_train, present_train, x_valid, present_valid)
 
 
 def run_search(dataset, side, k, panel, configs, split_spec, storage,
@@ -204,7 +154,7 @@ def run_search(dataset, side, k, panel, configs, split_spec, storage,
                 x_train, x_valid, row["preprocessing_seconds"] = inputs
                 _, scores, attrs = _fit(config, cell["pairs"][train], x_train,
                     cell["present"].iloc[train], x_valid, cell["present"].iloc[validation])
-                nll_sum = float(-np.asarray(scores["log_density"]).sum())
+                nll_sum = marginal_nll(scores, reduction="sum")
                 row.update(attrs, nll_sum=nll_sum, nll=nll_sum / len(validation))
             except (RuntimeError, ValueError, np.linalg.LinAlgError, FloatingPointError) as error:
                 row["error"] = repr(error)
@@ -284,35 +234,67 @@ def load_threshold_curve(storage, study_name, trial_number, score_name, decoder)
     return pd.DataFrame(json.loads(zlib.decompress(row[0])))
 
 
-def run_refit(study, storage, thresholds, output_dir, config_override=None, selection="cv_nll", retry_failed=False):
-    """Refit the selected label-free configuration, then attach gold diagnostics."""
+def select_best_trial(study):
+    """Return the finite completed NLL minimum, breaking ties by trial number."""
+    candidates = [trial for trial in study.trials if trial.state == TrialState.COMPLETE
+                  and trial.value is not None and np.isfinite(trial.value)]
+    if not candidates:
+        raise ValueError("No complete finite-NLL configuration is available")
+    return min(candidates, key=lambda trial: (trial.value, trial.number))
+
+
+def _artifact_sha256(path):
+    digest = sha256()
+    with Path(path).open("rb") as stream:
+        for block in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def run_refit(study, storage, thresholds, output_dir, config_override=None, selection="cv_nll",
+              retry_failed=False, evaluate=True, save_predictor=False):
+    """Refit the label-free winner, optionally evaluate and save its predictor.
+
+    ``evaluate=False`` never opens match labels or writes label-based decision
+    tables. ``save_predictor=True`` persists the fitted transformation and model
+    together, so prediction requires neither refitting nor gold labels.
+    """
     _database(storage)
     if isinstance(study, str):
         study = optuna.load_study(study_name=study, storage=_storage(storage))
-    candidates = [t for t in study.trials if t.state == TrialState.COMPLETE
-                  and t.value is not None and np.isfinite(t.value)]
-    if not candidates:
-        raise ValueError("No complete finite-NLL configuration is available")
-    selected = min(candidates, key=lambda t: (t.value, t.number))
+    selected = select_best_trial(study)
     spec = study.user_attrs["spec"]
     config = dict(selected.params, **(config_override or {}))
     policy = dict(source_protocol=study.user_attrs["protocol_hash"], source_trial=selected.number,
                   thresholds=thresholds, decoder_policy="threshold-and-greedy-no-evidence-abstain-v1",
-                  code_hash=_code_hash(), config_override=config_override or {}, selection=selection)
+                  code_hash=_code_hash(), config_override=config_override or {}, selection=selection,
+                  evaluate=bool(evaluate), save_predictor=bool(save_predictor))
     refit_hash = _hash(policy)
     suffix = "_full" if not config_override and selection == "cv_nll" else "_{}_full".format(
         re.sub(r"[^A-Za-z0-9_.-]+", "-", selection))
     full = optuna.create_study(study_name=study.study_name + suffix, storage=_storage(storage),
                                direction="minimize", load_if_exists=True)
     if full.user_attrs.get("refit_hash", refit_hash) != refit_hash:
-        raise ValueError("Refit selection or threshold policy changed; use a new experiment name")
-    if any(t.state == TrialState.COMPLETE or (t.state == TrialState.FAIL and not retry_failed)
-           for t in full.trials):
+        raise ValueError("Refit selection or threshold policy changed, including evaluation/artifact options; "
+                         "use a new experiment name")
+    complete = [trial for trial in full.trials if trial.state == TrialState.COMPLETE]
+    if complete:
+        if save_predictor:
+            for artifact in ("scores", "predictor"):
+                path = complete[-1].user_attrs.get(artifact + "_path")
+                expected = complete[-1].user_attrs.get(artifact + "_sha256")
+                if not path or not Path(path).is_file() or _artifact_sha256(path) != expected:
+                    raise ValueError("Completed refit {} artifact is missing or changed; "
+                                     "use a new experiment name".format(artifact))
+        return full
+    if any(trial.state == TrialState.FAIL for trial in full.trials) and not retry_failed:
         return full
     for key, value in dict(spec=spec, policy=policy, refit_hash=refit_hash, phase="full",
                            dataset=spec["dataset"], side=spec["side"], k=spec["k"],
                            panel_name=study.user_attrs["panel_name"], experiment=spec["experiment"],
-                           role="ablation" if config_override else "selected", selection=selection).items():
+                           role="ablation" if config_override else "selected", selection=selection,
+                           source_study_name=study.study_name, evaluate=bool(evaluate),
+                           save_predictor=bool(save_predictor)).items():
         full.set_user_attr(key, value)
     start = perf_counter()
     panel = spec["panel"]
@@ -320,53 +302,67 @@ def run_refit(study, storage, thresholds, output_dir, config_override=None, sele
                      metrics=panel["metrics"], include_record=panel.get("include_record", True))
     if cell["input_hash"] != spec["input_hash"] or _code_hash() != spec["code_hash"]:
         raise ValueError("Inputs or code changed since selection; rerun under a new experiment name")
-    all_rows = np.arange(len(cell["ids"]))
     try:
-        features, _, preprocessing_seconds = _prepare(cell, panel, all_rows, all_rows)
-        _, scores, attrs = _fit(config, cell["pairs"], features, cell["present"],
-                               features, cell["present"])
+        predictor = ZeroEREstimator(panel, config).fit(
+            cell["pairs"], cell["bank"], cell["present"], attributes=cell["attributes"])
+        features, scores = predictor.features_, predictor.scores_
+        attrs = dict(predictor.diagnostics_)
+        preprocessing_seconds = attrs["preprocessing_seconds"]
     except (RuntimeError, ValueError, np.linalg.LinAlgError, FloatingPointError) as error:
         full.add_trial(optuna.trial.create_trial(params=config, distributions=_distributions({selection: config}),
             state=TrialState.FAIL, user_attrs=dict(error=repr(error), selection=selection,
                 source_study=study.study_name, source_trial=selected.number, config_hash=_hash(config),
+                evaluate=bool(evaluate), save_predictor=bool(save_predictor),
                 seconds=perf_counter() - start)))
         return full
     observed, _ = _observed(cell["present"], features.columns)
     eligible = observed.any(axis=1)
-    # Gold is first opened here, after model/configuration selection and refitting.
-    is_gold, n_gold = _load_gold(spec["dataset"], cell["ids"])
     p_match = np.asarray(scores["p_match"])
-    clipped = np.clip(p_match, 1e-15, 1 - 1e-15)
-    attrs.update(brier=float(np.mean((p_match - is_gold) ** 2)),
-                 label_log_loss=float(-np.mean(is_gold * np.log(clipped) + (~is_gold) * np.log1p(-clipped))),
-                 calibration_population="candidate pairs", n_gold=n_gold,
-                 tp_blocking=int(is_gold.sum()), candset_size=len(is_gold))
-    score_specs = [("llr", scores["llr"], eligible, thresholds["llr"]),
-                   ("posterior", p_match, eligible, thresholds["posterior"])]
-    score_specs += [(name, values, valid, thresholds["cosine"]) for name, values, valid in _baselines(cell, panel)]
+    attrs.update(candset_size=len(cell["ids"]), evaluate=bool(evaluate), save_predictor=bool(save_predictor))
+    if evaluate:
+        # Gold is first opened here, after model/configuration selection and refitting.
+        is_gold, n_gold = _load_gold(spec["dataset"], cell["ids"])
+        clipped = np.clip(p_match, 1e-15, 1 - 1e-15)
+        attrs.update(brier=float(np.mean((p_match - is_gold) ** 2)),
+                     label_log_loss=float(-np.mean(is_gold * np.log(clipped) + (~is_gold) * np.log1p(-clipped))),
+                     calibration_population="candidate pairs", n_gold=n_gold,
+                     tp_blocking=int(is_gold.sum()))
+    score_specs = [("llr", scores["llr"], eligible), ("posterior", p_match, eligible)]
+    score_specs += list(_baselines(cell, panel))
     decisions, curves = [], []
     saved = cell["ids"].copy()
     for name in ("log_match", "log_nonmatch", "llr", "p_match", "log_density", "n_blocks"):
         saved[name] = scores[name]
     saved["eligible"] = eligible
-    for name, values, valid, cuts in score_specs:
-        decisions.extend(decision_rows(cell["pairs"], values, is_gold, n_gold, name, cuts, eligible=valid))
-        for decoder in ("threshold", "greedy"):
-            curves.append((name, decoder, threshold_curve(cell["pairs"], values, is_gold, n_gold,
-                                                          decoder=decoder, eligible=valid)))
+    for name, values, valid in score_specs:
+        if evaluate:
+            cuts = thresholds[name if name in ("llr", "posterior") else "cosine"]
+            decisions.extend(decision_rows(cell["pairs"], values, is_gold, n_gold, name, cuts, eligible=valid))
+            for decoder in ("threshold", "greedy"):
+                curves.append((name, decoder, threshold_curve(cell["pairs"], values, is_gold, n_gold,
+                                                              decoder=decoder, eligible=valid)))
         saved[name if name != "posterior" else "p_match"] = values
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     path = output_dir / (full.study_name + "__" + refit_hash[:12] + ".parquet")
     saved.to_parquet(path, index=False)
+    if save_predictor:
+        predictor_path = path.with_suffix(".pkl")
+        predictor.save(predictor_path)
+        attrs.update(predictor_path=str(predictor_path.resolve()),
+                     predictor_sha256=_artifact_sha256(predictor_path),
+                     scores_sha256=_artifact_sha256(path))
     attrs.update(selection=selection, source_study=study.study_name, source_trial=selected.number,
                  config_hash=_hash(config), validation_nll=selected.value,
-                 scores_path=str(path.resolve()), decisions=decisions,
+                 scores_path=str(path.resolve()),
                  preprocessing_seconds=preprocessing_seconds, load_timings=cell.get("timings", {}),
                  seconds=perf_counter() - start)
+    if evaluate:
+        attrs["decisions"] = decisions
     _json(attrs)  # Reject invalid numeric values before persisting a completed result.
     number = len(full.trials)
-    _store_decisions(storage, full, number, decisions, curves)
+    if evaluate:
+        _store_decisions(storage, full, number, decisions, curves)
     full.add_trial(optuna.trial.create_trial(params=config, distributions=_distributions({selection: config}),
                                             value=selected.value, user_attrs=attrs))
     return full

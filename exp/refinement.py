@@ -1,4 +1,4 @@
-"""Extend a completed six-configuration grid without refitting its existing trials."""
+"""Extend a completed configuration grid without refitting its existing trials."""
 from hashlib import sha256
 from pathlib import Path
 import re
@@ -27,12 +27,12 @@ def run_refinement(source_study, storage, configs, experiment="unsupervised-refi
         raise ValueError("Source study must minimise validation NLL")
     spec = attrs["spec"]
     original = core._configurations(spec["configs"])
-    if len(original) != 6 or len(trials) != 6 or any(
+    if len(trials) != len(original) or any(
             trial.state not in (TrialState.COMPLETE, TrialState.FAIL) for trial in trials):
-        raise ValueError("Source must contain all six finished configurations and no running trials")
+        raise ValueError("Source must contain one finished trial per declared configuration and no running trials")
     expected = {core._hash(config) for config in original.values()}
     actual = {core._hash(trial.params) for trial in trials}
-    if len(expected) != 6 or actual != expected or any(
+    if len(expected) != len(original) or actual != expected or any(
             trial.user_attrs.get("config_hash") != core._hash(trial.params) for trial in trials):
         raise ValueError("Source trials do not match its declared configurations")
     if any(trial.state == TrialState.COMPLETE and
@@ -82,7 +82,7 @@ def run_refinement(source_study, storage, configs, experiment="unsupervised-refi
                         splits=splits, load_timings=cell.get("timings", {}), refinement=refinement,
                         refinement_source_study=source.study_name,
                         refinement_source_experiment=spec["experiment"],
-                        refinement_source_protocol_hash=attrs["protocol_hash"], copied_trials=6)
+                        refinement_source_protocol_hash=attrs["protocol_hash"], copied_trials=len(trials))
         for key, value in metadata.items():
             target.set_user_attr(key, value)
     finished = {trial.user_attrs.get("config_hash") for trial in target.trials}

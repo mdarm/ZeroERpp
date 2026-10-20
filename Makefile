@@ -2,9 +2,11 @@ PYTHON ?= python3
 ARGS ?=
 export PYTHON
 
-.PHONY: init dataset verify-data prepare blocking primary sensitivity match baselines timings report reproduce
+.PHONY: init init_local dataset verify-data prepare blocking primary sensitivity match tune baselines timings report reproduce
 
-init:
+init: docker_build
+
+init_local:
 	$(PYTHON) -m pip install -r requirements.txt
 
 dataset:
@@ -28,6 +30,9 @@ sensitivity:
 match:
 	$(PYTHON) -u main_zeroer.py match --scope all --workers 4 $(ARGS)
 
+tune:
+	bash scripts/tune.sh $(ARGS)
+
 baselines:
 	bash scripts/baselines.sh $(ARGS)
 
@@ -39,3 +44,28 @@ report:
 
 reproduce:
 	bash scripts/reproduce.sh $(ARGS)
+
+# The image contains dependencies and runs the mounted checkout.
+DOCKER_IMAGE ?= zeroerpp
+ROOT := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
+DOCKER_PARAMETERS := \
+	--user "$(shell id -u):$(shell id -g)" \
+	-v "$(ROOT):/app" \
+	-w /app \
+	-e PYTHON=python3
+
+.PHONY: docker_build run_module bash_docker .require-module
+
+docker_build:
+	docker build -t "$(DOCKER_IMAGE)" "$(ROOT)"
+
+run_module: .require-module
+	docker run -i --rm $(DOCKER_PARAMETERS) "$(DOCKER_IMAGE)" $(module)
+
+bash_docker:
+	docker run -it --rm $(DOCKER_PARAMETERS) "$(DOCKER_IMAGE)" bash
+
+.require-module:
+ifndef module
+	$(error module is required, for example module="bash scripts/reproduce.sh")
+endif

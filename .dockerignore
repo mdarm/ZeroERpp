@@ -1,0 +1,6 @@
+# Only the dependency specification is needed to build the environment image.
+# Code, raw data and generated results are supplied by the /app bind mount.
+*
+!Dockerfile
+!.dockerignore
+!requirements.txt

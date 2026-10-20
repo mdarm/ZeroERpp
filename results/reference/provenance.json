@@ -1,0 +1,588 @@
+{
+  "environments": {
+    "unsupervised-baselines-v2": {
+      "metadata": {
+        "ag4_manifest": "outputs/cosine_bank/amazon_googleproducts__left_k4/manifest.json",
+        "baseline_score_state": "legacy_last_e_step",
+        "blas_threads": 1,
+        "candidate_policy": "Fixed previously selected KaLM cosine blocker; five strict PC>=.90 lowest-cost primary cells plus nineteen sensitivity cells, union22. No blocker search.",
+        "experiment_role": "original ZeroER baselines on frozen candidate sets",
+        "extra_primary_workers": 2,
+        "extra_reader_hash": "ed028fba422c44f8402a6fad1342fbf1cfc183074b2d429c30dc036734bd5317",
+        "feature_policy": "reuse genuine Magellan caches; compute only pairs absent from union of saved caches",
+        "fit_matching_separate": true,
+        "initial_candidate_policy": "existing LADDER cells, no blocking rerun",
+        "logical_cpus": 14,
+        "model_transitivity": false,
+        "packages": {
+          "joblib": "1.5.3",
+          "numpy": "1.26.4",
+          "optuna": "4.7.0",
+          "pandas": "2.3.3",
+          "pyarrow": "23.0.1",
+          "scikit-learn": "1.7.2",
+          "scipy": "1.15.3",
+          "sqlalchemy": "2.0.48"
+        },
+        "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+        "primary_cells": [
+          [
+            "fodors_zagats",
+            "right",
+            1
+          ],
+          [
+            "dblp_acm",
+            "right",
+            1
+          ],
+          [
+            "abt_buy",
+            "left",
+            2
+          ],
+          [
+            "amazon_googleproducts",
+            "left",
+            4
+          ],
+          [
+            "dblp_scholar",
+            "left",
+            6
+          ]
+        ],
+        "python": "3.10.12 (main, Aug 31 2026, 10:18:17) [GCC 11.4.0]",
+        "repo_revision": "69466cad3195ddaaf1911be8c8e33c3f6c67f71f",
+        "scope_updated_utc": "2026-10-19T21:12:30.462236+00:00",
+        "score_state": "legacy_last_e_step",
+        "search_workers": 1,
+        "selected_score_state": "final_parameters",
+        "sensitivity_cells": [
+          [
+            "fodors_zagats",
+            "right",
+            4
+          ],
+          [
+            "fodors_zagats",
+            "left",
+            1
+          ],
+          [
+            "fodors_zagats",
+            "right",
+            1
+          ],
+          [
+            "dblp_acm",
+            "right",
+            12
+          ],
+          [
+            "dblp_acm",
+            "right",
+            5
+          ],
+          [
+            "dblp_acm",
+            "left",
+            2
+          ],
+          [
+            "dblp_acm",
+            "left",
+            1
+          ],
+          [
+            "abt_buy",
+            "left",
+            13
+          ],
+          [
+            "abt_buy",
+            "right",
+            5
+          ],
+          [
+            "abt_buy",
+            "left",
+            2
+          ],
+          [
+            "abt_buy",
+            "left",
+            1
+          ],
+          [
+            "amazon_googleproducts",
+            "right",
+            5
+          ],
+          [
+            "amazon_googleproducts",
+            "right",
+            2
+          ],
+          [
+            "amazon_googleproducts",
+            "left",
+            2
+          ],
+          [
+            "amazon_googleproducts",
+            "left",
+            1
+          ],
+          [
+            "dblp_scholar",
+            "right",
+            1
+          ],
+          [
+            "dblp_scholar",
+            "left",
+            10
+          ],
+          [
+            "dblp_scholar",
+            "left",
+            5
+          ],
+          [
+            "dblp_scholar",
+            "left",
+            1
+          ]
+        ],
+        "source_hash": "35752952190706a61339c7a4f92d1fae63320304b9c635b8236a55fbee3bb68a",
+        "split_folds": 3,
+        "split_seed": 0,
+        "timing_workers": 1,
+        "upstream_revision": "4c1ea6acd2c214b32b2e52cca9b8d50afc180220"
+      },
+      "recorded_utc": "2026-10-19T21:21:30.166602+00:00"
+    },
+    "unsupervised-refined-v1": {
+      "metadata": {
+        "ag4_manifest": "outputs/cosine_bank/amazon_googleproducts__left_k4/manifest.json",
+        "baseline_score_state": "legacy_last_e_step",
+        "blas_threads": 1,
+        "candidate_policy": "Fixed previously selected KaLM cosine blocker; five strict PC>=.90 lowest-cost primary cells plus nineteen sensitivity cells, union22. No blocker search.",
+        "decision_separation": "All accepted fits transitivity=False; legacy in-model-transitivity ablations explicitly excluded.",
+        "extra_primary_workers": 2,
+        "extra_reader_hash": "ed028fba422c44f8402a6fad1342fbf1cfc183074b2d429c30dc036734bd5317",
+        "fit_matching_separate": true,
+        "initial_candidate_policy": "existing LADDER cells, no blocking rerun",
+        "logical_cpus": 14,
+        "model_transitivity": false,
+        "packages": {
+          "joblib": "1.5.3",
+          "numpy": "1.26.4",
+          "optuna": "4.7.0",
+          "pandas": "2.3.3",
+          "pyarrow": "23.0.1",
+          "scikit-learn": "1.7.2",
+          "scipy": "1.15.3",
+          "sqlalchemy": "2.0.48"
+        },
+        "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+        "primary_cells": [
+          [
+            "fodors_zagats",
+            "right",
+            1
+          ],
+          [
+            "dblp_acm",
+            "right",
+            1
+          ],
+          [
+            "abt_buy",
+            "left",
+            2
+          ],
+          [
+            "amazon_googleproducts",
+            "left",
+            4
+          ],
+          [
+            "dblp_scholar",
+            "left",
+            6
+          ]
+        ],
+        "python": "3.10.12 (main, Aug 31 2026, 10:18:17) [GCC 11.4.0]",
+        "refinement": "Original six configurations reused; four added at c_bay 0 and 0.0001; ten-way within-panel NLL selection.",
+        "repo_revision": "69466cad3195ddaaf1911be8c8e33c3f6c67f71f",
+        "scope_updated_utc": "2026-10-19T21:12:30.462550+00:00",
+        "search_workers": 4,
+        "selected_score_state": "final_parameters",
+        "sensitivity_cells": [
+          [
+            "fodors_zagats",
+            "right",
+            4
+          ],
+          [
+            "fodors_zagats",
+            "left",
+            1
+          ],
+          [
+            "fodors_zagats",
+            "right",
+            1
+          ],
+          [
+            "dblp_acm",
+            "right",
+            12
+          ],
+          [
+            "dblp_acm",
+            "right",
+            5
+          ],
+          [
+            "dblp_acm",
+            "left",
+            2
+          ],
+          [
+            "dblp_acm",
+            "left",
+            1
+          ],
+          [
+            "abt_buy",
+            "left",
+            13
+          ],
+          [
+            "abt_buy",
+            "right",
+            5
+          ],
+          [
+            "abt_buy",
+            "left",
+            2
+          ],
+          [
+            "abt_buy",
+            "left",
+            1
+          ],
+          [
+            "amazon_googleproducts",
+            "right",
+            5
+          ],
+          [
+            "amazon_googleproducts",
+            "right",
+            2
+          ],
+          [
+            "amazon_googleproducts",
+            "left",
+            2
+          ],
+          [
+            "amazon_googleproducts",
+            "left",
+            1
+          ],
+          [
+            "dblp_scholar",
+            "right",
+            1
+          ],
+          [
+            "dblp_scholar",
+            "left",
+            10
+          ],
+          [
+            "dblp_scholar",
+            "left",
+            5
+          ],
+          [
+            "dblp_scholar",
+            "left",
+            1
+          ]
+        ],
+        "source_hash": "35752952190706a61339c7a4f92d1fae63320304b9c635b8236a55fbee3bb68a",
+        "split_folds": 3,
+        "split_seed": 0,
+        "timing_workers": 1,
+        "upstream_revision": "4c1ea6acd2c214b32b2e52cca9b8d50afc180220"
+      },
+      "recorded_utc": "2026-10-19T20:39:23.248264+00:00"
+    },
+    "unsupervised-v1": {
+      "metadata": {
+        "ag4_manifest": "outputs/cosine_bank/amazon_googleproducts__left_k4/manifest.json",
+        "baseline_score_state": "legacy_last_e_step",
+        "blas_threads": 1,
+        "candidate_policy": "Fixed previously selected KaLM cosine blocker; five strict PC>=.90 lowest-cost primary cells plus nineteen sensitivity cells, union22. No blocker search.",
+        "extra_primary_workers": 2,
+        "extra_reader_hash": "ed028fba422c44f8402a6fad1342fbf1cfc183074b2d429c30dc036734bd5317",
+        "fit_matching_separate": true,
+        "initial_candidate_policy": "existing LADDER cells, no blocking rerun",
+        "logical_cpus": 14,
+        "model_transitivity": false,
+        "packages": {
+          "joblib": "1.5.3",
+          "numpy": "1.26.4",
+          "optuna": "4.7.0",
+          "pandas": "2.3.3",
+          "pyarrow": "23.0.1",
+          "scikit-learn": "1.7.2",
+          "scipy": "1.15.3",
+          "sqlalchemy": "2.0.48"
+        },
+        "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+        "primary_cells": [
+          [
+            "fodors_zagats",
+            "right",
+            1
+          ],
+          [
+            "dblp_acm",
+            "right",
+            1
+          ],
+          [
+            "abt_buy",
+            "left",
+            2
+          ],
+          [
+            "amazon_googleproducts",
+            "left",
+            4
+          ],
+          [
+            "dblp_scholar",
+            "left",
+            6
+          ]
+        ],
+        "python": "3.10.12 (main, Aug 31 2026, 10:18:17) [GCC 11.4.0]",
+        "repo_revision": "69466cad3195ddaaf1911be8c8e33c3f6c67f71f",
+        "scope_updated_utc": "2026-10-19T21:12:30.462236+00:00",
+        "search_workers": 4,
+        "selected_score_state": "final_parameters",
+        "sensitivity_cells": [
+          [
+            "fodors_zagats",
+            "right",
+            4
+          ],
+          [
+            "fodors_zagats",
+            "left",
+            1
+          ],
+          [
+            "fodors_zagats",
+            "right",
+            1
+          ],
+          [
+            "dblp_acm",
+            "right",
+            12
+          ],
+          [
+            "dblp_acm",
+            "right",
+            5
+          ],
+          [
+            "dblp_acm",
+            "left",
+            2
+          ],
+          [
+            "dblp_acm",
+            "left",
+            1
+          ],
+          [
+            "abt_buy",
+            "left",
+            13
+          ],
+          [
+            "abt_buy",
+            "right",
+            5
+          ],
+          [
+            "abt_buy",
+            "left",
+            2
+          ],
+          [
+            "abt_buy",
+            "left",
+            1
+          ],
+          [
+            "amazon_googleproducts",
+            "right",
+            5
+          ],
+          [
+            "amazon_googleproducts",
+            "right",
+            2
+          ],
+          [
+            "amazon_googleproducts",
+            "left",
+            2
+          ],
+          [
+            "amazon_googleproducts",
+            "left",
+            1
+          ],
+          [
+            "dblp_scholar",
+            "right",
+            1
+          ],
+          [
+            "dblp_scholar",
+            "left",
+            10
+          ],
+          [
+            "dblp_scholar",
+            "left",
+            5
+          ],
+          [
+            "dblp_scholar",
+            "left",
+            1
+          ]
+        ],
+        "source_hash": "35752952190706a61339c7a4f92d1fae63320304b9c635b8236a55fbee3bb68a",
+        "split_folds": 3,
+        "split_seed": 0,
+        "timing_workers": 1,
+        "upstream_revision": "4c1ea6acd2c214b32b2e52cca9b8d50afc180220"
+      },
+      "recorded_utc": "2026-10-19T20:39:23.248264+00:00"
+    }
+  },
+  "failure": "DBLP-ACM right/k12 all:separate selected refit: mixture collapsed to one component; retain failed status.",
+  "historical_artifact_parity": {
+    "experiment_table_rows": 70,
+    "experiment_winner_rows": 320,
+    "max_metric_atol": 1e-12,
+    "panel_table_rows": 27,
+    "panel_winner_rows": 135
+  },
+  "metric_audit": {
+    "max_metric_residual": 0.0,
+    "rows": 67158
+  },
+  "metric_formula": "F1=2*TP/(predicted+full_gold_count)",
+  "reference_files": {
+    "blocking_primary_points.csv": {
+      "bytes": 465,
+      "sha256": "abbd9426ba837af0a638f13b36f3a068066ce539444ce4f8c0efb90fa6be27e3"
+    },
+    "blocking_ranking.csv": {
+      "bytes": 1322,
+      "sha256": "f6dafa1a43ded986f6505e371791fa5e07b04658a1731c508fc623b735e5bbd1"
+    },
+    "blocking_scope.csv": {
+      "bytes": 146,
+      "sha256": "89ef3db2b509b7a0ef79ae0e511acc7808533b2f7234b69684cc36b3523422f5"
+    },
+    "blocking_sensitivity_points.csv": {
+      "bytes": 1425,
+      "sha256": "b8cd536690cf325eef728817f967cd04c71d82840f825c9776116044b16e7f90"
+    },
+    "blocking_trials.csv.gz": {
+      "bytes": 248373,
+      "sha256": "4378d210b082497cc3b9f8c0a1d22f873bdcb6e99caac7251c7113b854ad57ae"
+    },
+    "candidate_diagnostics.csv": {
+      "bytes": 2746,
+      "sha256": "4165361cc8b39a81cf4b63fbd2f046c5c2f8d21ed2d0b0e7e27730d3a9c24920"
+    },
+    "coverage.csv": {
+      "bytes": 526,
+      "sha256": "07a387dcffc6d6154677fb0ec60a66a11af616f69a09fc16b32fa492f9e14dab"
+    },
+    "decision_counts.csv.gz": {
+      "bytes": 1613637,
+      "sha256": "029d6358a3d6c7da3f161224034d3cc23400d8ecf8ca95652f7e2362bda7fea4"
+    },
+    "experiment_table.csv": {
+      "bytes": 11182,
+      "sha256": "1964547943d4540f3c753a7a1abf28c21156fc4d70c47e1dcd3b60194c95ffa4"
+    },
+    "experiment_winners.csv": {
+      "bytes": 64378,
+      "sha256": "8108729e93cf379e4f260817d2391b4d6ce56d54ae2c43a25c125f253d2fd41d"
+    },
+    "fit_configs.csv.gz": {
+      "bytes": 13220,
+      "sha256": "7b17909d5d90eac2e6dbb0372036dc364d5b2d11b4e91d81ea264747bcb10467"
+    },
+    "panel_table.csv": {
+      "bytes": 3323,
+      "sha256": "55e0eefbc3bfd4b7b801ae7a50556d72f1ddbb6b30bba0fc0ec1581528b1c11e"
+    },
+    "panel_winners.csv": {
+      "bytes": 21333,
+      "sha256": "71668cbd6fb40abb1d103e06e0211512e4fc75a77abcf2289fb4a01047c8a7fc"
+    },
+    "primary_coverage.csv": {
+      "bytes": 556,
+      "sha256": "0a4f8efeabbe7887a3457764aa192000469ac293d7913ac084a10c3d02ea3412"
+    },
+    "primary_fixed_summary.csv": {
+      "bytes": 358534,
+      "sha256": "6ebaae612a5f73dd32d5b58b0ecffc8a58dfda2fed1d0f7bf094704c98810cde"
+    },
+    "primary_timing_comparison.csv": {
+      "bytes": 16932,
+      "sha256": "b8213ea016230cd14c653cc557cf1e32698ea6ec0d7697db31665c0b67173be5"
+    },
+    "selection_configs.csv.gz": {
+      "bytes": 10203,
+      "sha256": "9be4daa04c0686845a590413efd18acbb002c18ed70df1fa32f01f19fbdf654d"
+    },
+    "timing_coverage.csv": {
+      "bytes": 34909,
+      "sha256": "ca49bf5046e05a2b5d75e67c1f444022c3543ac5ec97c35bbbefecb39e302934"
+    }
+  },
+  "scopes": {
+    "blocking_trials": 20000,
+    "panels": 27,
+    "primary_cells": 5,
+    "sensitivity_cells": 19,
+    "union_cells": 22
+  },
+  "selection": "Minimum 3-fold record-disjoint marginal validation NLL inside each panel; panels and decision-rule summaries use gold.",
+  "source": "October 20, 2026 publication experiments",
+  "source_database_bytes": 5992325120,
+  "source_repository_commit": "a169b36",
+  "source_tables": "Raw Optuna, unsupervised_decisions and candidate-diagnostics tables; persisted report snapshots are not inputs."
+}

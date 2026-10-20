@@ -1,0 +1,6 @@
+dataset,models,tied_first,used_for_ranking
+abt_buy,20,4,1
+amazon_googleproducts,20,1,1
+dblp_acm,20,20,0
+dblp_scholar,20,1,1
+fodors_zagats,20,18,0

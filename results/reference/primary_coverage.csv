@@ -1,0 +1,6 @@
+dataset,side,k,expected_panels,expected_baseline_trials,search_studies,finished_search_studies,search_studies_without_valid_configuration,selected_refits,selected_refits_terminal,selected_refits_failed,baseline_trials,baseline_trials_terminal,baseline_trials_failed,status
+fodors_zagats,right,1,27,2,27,27,0,27,27,0,2,2,0,complete
+dblp_acm,right,1,27,2,27,27,0,27,27,0,2,2,0,complete
+abt_buy,left,2,27,2,27,27,0,27,27,0,2,2,0,complete
+amazon_googleproducts,left,4,27,2,27,27,0,27,27,0,2,2,0,complete
+dblp_scholar,left,6,27,2,27,27,0,27,27,0,2,2,0,complete

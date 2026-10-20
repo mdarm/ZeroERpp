@@ -1,0 +1,321 @@
+scope,section,experiment_label,dataset,side,k,panel_name,role,selection,baseline,score_name,decoder,rule,threshold_json,uses_gold,tp,predicted,n_gold,precision,recall,f1,cells
+primary,diagnostic,Hard EM diagnostic (MiniLM6) · best declared cut/decoder,abt_buy,left,2,single:minilm6,ablation,hard_em,,llr,greedy,fixed,-5.0,0,889,982,1097,0.90529531568228105,0.81039197812215136,0.85521885521885521,1
+primary,diagnostic,Hard EM diagnostic (MiniLM6) · best declared cut/decoder,amazon_googleproducts,left,4,single:minilm6,ablation,hard_em,,llr,greedy,fixed,-5.0,0,686,1216,1300,0.56414473684210531,0.52769230769230768,0.54531001589825123,1
+primary,diagnostic,Hard EM diagnostic (MiniLM6) · best declared cut/decoder,dblp_acm,right,1,single:minilm6,ablation,hard_em,,llr,threshold,fixed,-5.0,0,1968,1977,2224,0.99544764795144158,0.8848920863309353,0.93691978100452278,1
+primary,diagnostic,Hard EM diagnostic (MiniLM6) · best declared cut/decoder,dblp_scholar,left,6,single:minilm6,ablation,hard_em,,llr,threshold,fixed,-5.0,0,4397,5126,5347,0.85778384705423327,0.82233027866093134,0.8396829943664661,1
+primary,diagnostic,Hard EM diagnostic (MiniLM6) · best declared cut/decoder,fodors_zagats,right,1,single:minilm6,ablation,hard_em,,llr,greedy,fixed,5.0,0,103,119,112,0.86554621848739499,0.9196428571428571,0.89177489177489178,1
+primary,diagnostic,Hard EM diagnostic (MiniLM6) · posterior ≥ .5,abt_buy,left,2,single:minilm6,ablation,hard_em,,posterior,threshold,fixed,0.5,0,981,1934,1097,0.50723888314374355,0.89425706472196898,0.64731111844275813,1
+primary,diagnostic,Hard EM diagnostic (MiniLM6) · posterior ≥ .5,amazon_googleproducts,left,4,single:minilm6,ablation,hard_em,,posterior,threshold,fixed,0.5,0,866,2553,1300,0.33920877399138266,0.66615384615384621,0.44951985465870747,1
+primary,diagnostic,Hard EM diagnostic (MiniLM6) · posterior ≥ .5,dblp_acm,right,1,single:minilm6,ablation,hard_em,,posterior,threshold,fixed,0.5,0,1962,1970,2224,0.9959390862944163,0.8821942446043165,0.93562231759656656,1
+primary,diagnostic,Hard EM diagnostic (MiniLM6) · posterior ≥ .5,dblp_scholar,left,6,single:minilm6,ablation,hard_em,,posterior,threshold,fixed,0.5,0,4007,4347,5347,0.92178513917644356,0.74939218253226103,0.82669692593356714,1
+primary,diagnostic,Hard EM diagnostic (MiniLM6) · posterior ≥ .5,fodors_zagats,right,1,single:minilm6,ablation,hard_em,,posterior,threshold,fixed,0.5,0,103,226,112,0.45575221238938052,0.9196428571428571,0.60946745562130178,1
+primary,diagnostic,Zero-fill diagnostic (MiniLM6) · best declared cut/decoder,abt_buy,left,2,single:minilm6,ablation,zero_fill,,llr,greedy,fixed,-5.0,0,859,956,1097,0.89853556485355646,0.78304466727438471,0.83682415976619584,1
+primary,diagnostic,Zero-fill diagnostic (MiniLM6) · best declared cut/decoder,amazon_googleproducts,left,4,single:minilm6,ablation,zero_fill,,llr,greedy,fixed,-5.0,0,527,1049,1300,0.50238322211630126,0.4053846153846154,0.44870157513835673,1
+primary,diagnostic,Zero-fill diagnostic (MiniLM6) · best declared cut/decoder,dblp_acm,right,1,single:minilm6,ablation,zero_fill,,llr,threshold,fixed,-5.0,0,1963,1972,2224,0.99543610547667338,0.88264388489208634,0.93565300285986652,1
+primary,diagnostic,Zero-fill diagnostic (MiniLM6) · best declared cut/decoder,dblp_scholar,left,6,single:minilm6,ablation,zero_fill,,llr,threshold,fixed,-5.0,0,4209,4864,5347,0.86533717105263153,0.78717037591172623,0.82440505337381254,1
+primary,diagnostic,Zero-fill diagnostic (MiniLM6) · best declared cut/decoder,fodors_zagats,right,1,single:minilm6,ablation,zero_fill,,llr,greedy,fixed,5.0,0,103,117,112,0.88034188034188032,0.9196428571428571,0.89956331877729256,1
+primary,diagnostic,Zero-fill diagnostic (MiniLM6) · posterior ≥ .5,abt_buy,left,2,single:minilm6,ablation,zero_fill,,posterior,threshold,fixed,0.5,0,918,1734,1097,0.52941176470588236,0.83682771194165906,0.64853408689509007,1
+primary,diagnostic,Zero-fill diagnostic (MiniLM6) · posterior ≥ .5,amazon_googleproducts,left,4,single:minilm6,ablation,zero_fill,,posterior,threshold,fixed,0.5,0,71,196,1300,0.36224489795918369,0.054615384615384614,0.094919786096256689,1
+primary,diagnostic,Zero-fill diagnostic (MiniLM6) · posterior ≥ .5,dblp_acm,right,1,single:minilm6,ablation,zero_fill,,posterior,threshold,fixed,0.5,0,1958,1966,2224,0.99593082400813837,0.88039568345323738,0.93460620525059668,1
+primary,diagnostic,Zero-fill diagnostic (MiniLM6) · posterior ≥ .5,dblp_scholar,left,6,single:minilm6,ablation,zero_fill,,posterior,threshold,fixed,0.5,0,3757,4057,5347,0.92605373428641857,0.7026369927061904,0.79902169289663971,1
+primary,diagnostic,Zero-fill diagnostic (MiniLM6) · posterior ≥ .5,fodors_zagats,right,1,single:minilm6,ablation,zero_fill,,posterior,threshold,fixed,0.5,0,103,226,112,0.45575221238938052,0.9196428571428571,0.60946745562130178,1
+primary,grid,Attribute similarity means · best declared cut/decoder,abt_buy,left,2,single:Octen_Octen-Embedding-8B,selected,cv_nll,,attribute_cos:mean,greedy,fixed,0.3,0,951,998,1097,0.9529058116232465,0.86690975387420233,0.90787589498806687,1
+primary,grid,Attribute similarity means · best declared cut/decoder,amazon_googleproducts,left,4,single:Octen_Octen-Embedding-8B,selected,cv_nll,,attribute_cos:mean,greedy,fixed,0.5,0,843,1333,1300,0.63240810202550635,0.64846153846153842,0.64033421952145841,1
+primary,grid,Attribute similarity means · best declared cut/decoder,dblp_acm,right,1,all:family,selected,cv_nll,,attribute_cos:mean,greedy,fixed,0.8,0,2204,2219,2224,0.99324019828751686,0.99100719424460426,0.99212243979293269,1
+primary,grid,Attribute similarity means · best declared cut/decoder,dblp_scholar,left,6,single:tencent_KaLM-Embedding-Gemma3-12B-2511,selected,cv_nll,,attribute_cos:mean,threshold,fixed,0.9,0,4335,5203,5347,0.83317316932538921,0.81073499158406581,0.82180094786729863,1
+primary,grid,Attribute similarity means · best declared cut/decoder,fodors_zagats,right,1,single:codefuse-ai_F2LLM-v2-4B,selected,cv_nll,,attribute_cos:mean,greedy,fixed,0.8,0,111,115,112,0.9652173913043478,0.9910714285714286,0.97797356828193838,1
+primary,grid,B-code · best declared cut/decoder,abt_buy,left,2,handcrafted,baseline,,B-code,legacy_posterior,threshold,fixed,0.1,0,31,54,1097,0.57407407407407407,0.028258887876025523,0.053866203301476977,1
+primary,grid,B-code · best declared cut/decoder,amazon_googleproducts,left,4,handcrafted,baseline,,B-code,legacy_posterior,threshold,fixed,0.1,0,82,238,1300,0.34453781512605042,0.063076923076923072,0.10663198959687907,1
+primary,grid,B-code · best declared cut/decoder,dblp_acm,right,1,handcrafted,baseline,,B-code,legacy_posterior,greedy,fixed,0.75,0,2190,2199,2224,0.99590723055934516,0.98471223021582732,0.99027809179290072,1
+primary,grid,B-code · best declared cut/decoder,dblp_scholar,left,6,handcrafted,baseline,,B-code,legacy_posterior,threshold,fixed,0.1,0,2128,2214,5347,0.96115627822944893,0.39798017579951372,0.56288850681126834,1
+primary,grid,B-code · best declared cut/decoder,fodors_zagats,right,1,handcrafted,baseline,,B-code,legacy_posterior,greedy,fixed,0.1,0,105,106,112,0.99056603773584906,0.9375,0.96330275229357798,1
+primary,grid,B-paper · best declared cut/decoder,abt_buy,left,2,handcrafted,baseline,,B-paper,legacy_posterior,threshold,fixed,0.1,0,197,472,1097,0.4173728813559322,0.17958067456700091,0.25111536010197577,1
+primary,grid,B-paper · best declared cut/decoder,amazon_googleproducts,left,4,handcrafted,baseline,,B-paper,legacy_posterior,threshold,fixed,0.1,0,221,605,1300,0.36528925619834712,0.17000000000000001,0.23202099737532808,1
+primary,grid,B-paper · best declared cut/decoder,dblp_acm,right,1,handcrafted,baseline,,B-paper,legacy_posterior,greedy,fixed,0.1,0,2168,2171,2224,0.99861814831874707,0.97482014388489213,0.98657565415244597,1
+primary,grid,B-paper · best declared cut/decoder,dblp_scholar,left,6,handcrafted,baseline,,B-paper,legacy_posterior,threshold,fixed,0.25,0,4056,4914,5347,0.82539682539682535,0.7585561997381709,0.7905662216158269,1
+primary,grid,B-paper · best declared cut/decoder,fodors_zagats,right,1,handcrafted,baseline,,B-paper,legacy_posterior,greedy,fixed,0.1,0,111,111,112,1,0.9910714285714286,0.99551569506726456,1
+primary,grid,Embedding combinations · best declared cut/decoder,abt_buy,left,2,all:mean,selected,cv_nll,,llr,greedy,fixed,-5.0,0,941,983,1097,0.95727365208545268,0.85779398359161352,0.90480769230769231,1
+primary,grid,Embedding combinations · best declared cut/decoder,amazon_googleproducts,left,4,all:mean,selected,cv_nll,,llr,greedy,fixed,-5.0,0,847,1329,1300,0.63732129420617001,0.65153846153846151,0.64435146443514646,1
+primary,grid,Embedding combinations · best declared cut/decoder,dblp_acm,right,1,all:zmean,selected,cv_nll,,llr,greedy,fixed,-5.0,0,2099,2102,2224,0.99857278782112269,0.94379496402877694,0.97041146555709668,1
+primary,grid,Embedding combinations · best declared cut/decoder,dblp_scholar,left,6,all:zmean,selected,cv_nll,,posterior,threshold,fixed,0.25,0,4636,5186,5347,0.89394523717701502,0.86702824013465496,0.88028102155131494,1
+primary,grid,Embedding combinations · best declared cut/decoder,fodors_zagats,right,1,retriever:pair,selected,cv_nll,,llr,greedy,fixed,-5.0,0,111,111,112,1,0.9910714285714286,0.99551569506726456,1
+primary,grid,Record cosine/models or means · best declared cut/decoder,abt_buy,left,2,all:family,selected,cv_nll,,record_cos:tencent_KaLM-Embedding-Gemma3-12B-2511,greedy,fixed,0.3,0,951,1001,1097,0.95004995004995008,0.86690975387420233,0.90657769304099145,1
+primary,grid,Record cosine/models or means · best declared cut/decoder,amazon_googleproducts,left,4,all:family,selected,cv_nll,,record_cos:codefuse-ai_F2LLM-v2-4B,greedy,fixed,0.5,0,887,1339,1300,0.66243465272591484,0.68230769230769228,0.67222432739674121,1
+primary,grid,Record cosine/models or means · best declared cut/decoder,dblp_acm,right,1,all:family,selected,cv_nll,,record_cos:st5_xl,greedy,fixed,0.9,0,2202,2211,2224,0.99592944369063774,0.9901079136690647,0.99301014656144304,1
+primary,grid,Record cosine/models or means · best declared cut/decoder,dblp_scholar,left,6,all:family,selected,cv_nll,,record_cos:Qwen_Qwen3-Embedding-8B,threshold,fixed,0.9,0,4632,5251,5347,0.88211769186821554,0.86628015709743778,0.87412719381015291,1
+primary,grid,Record cosine/models or means · best declared cut/decoder,fodors_zagats,right,1,all:family,selected,cv_nll,,record_cos:codefuse-ai_F2LLM-v2-4B,greedy,fixed,0.8,0,109,109,112,1,0.9732142857142857,0.98642533936651589,1
+primary,grid,Single embedding · best declared cut/decoder,abt_buy,left,2,single:microsoft_harrier-oss-v1-0.6b,selected,cv_nll,,llr,greedy,fixed,-5.0,0,945,974,1097,0.97022587268993843,0.86144029170464909,0.91260260743602128,1
+primary,grid,Single embedding · best declared cut/decoder,amazon_googleproducts,left,4,single:codefuse-ai_F2LLM-v2-8B,selected,cv_nll,,llr,greedy,fixed,-5.0,0,872,1330,1300,0.65563909774436091,0.67076923076923078,0.66311787072243344,1
+primary,grid,Single embedding · best declared cut/decoder,dblp_acm,right,1,single:nvidia_llama-embed-nemotron-8b,selected,cv_nll,,posterior,greedy,fixed,0.1,0,2194,2204,2224,0.99546279491833034,0.98651079136690645,0.99096657633243002,1
+primary,grid,Single embedding · best declared cut/decoder,dblp_scholar,left,6,single:Octen_Octen-Embedding-8B,selected,cv_nll,,posterior,threshold,fixed,0.75,0,4611,5082,5347,0.90731995277449828,0.86235272115204786,0.88426503020423819,1
+primary,grid,Single embedding · best declared cut/decoder,fodors_zagats,right,1,single:e5_large_v2,selected,cv_nll,,llr,greedy,fixed,-5.0,0,111,112,112,0.9910714285714286,0.9910714285714286,0.9910714285714286,1
+primary,oracle,Exact score-threshold oracle · best scored method,abt_buy,left,2,single:e5_instruct,selected,cv_nll,,llr,greedy,oracle_threshold,-23.124490350134902,1,970,1001,1097,0.96903096903096908,0.88422971741112122,0.92469018112488088,1
+primary,oracle,Exact score-threshold oracle · best scored method,amazon_googleproducts,left,4,all:family,selected,cv_nll,,record_cos:codefuse-ai_F2LLM-v2-4B,greedy,oracle_threshold,0.5270529011444572,1,887,1337,1300,0.66342557965594617,0.68230769230769228,0.67273416761471372,1
+primary,oracle,Exact score-threshold oracle · best scored method,dblp_acm,right,1,all:zmean,selected,cv_nll,,llr,greedy,oracle_threshold,-436.1400657053359,1,2205,2211,2224,0.99728629579375849,0.9914568345323741,0.99436302142051858,1
+primary,oracle,Exact score-threshold oracle · best scored method,dblp_scholar,left,6,all:family,selected,cv_nll,,record_cos:e5_instruct,threshold,oracle_threshold,0.9401301051897877,1,4682,5166,5347,0.90631049167634536,0.87563119506265197,0.89070674403119943,1
+primary,oracle,Exact score-threshold oracle · best scored method,fodors_zagats,right,1,all:family,selected,cv_nll,,record_cos:e5_large_v2,greedy,oracle_threshold,0.9307037242852122,1,112,112,112,1,1,1,1
+primary,reference,Attribute similarity means · no-cut greedy,abt_buy,left,2,single:Octen_Octen-Embedding-8B,selected,cv_nll,,attribute_cos:mean,greedy,pure_transitivity,null,0,951,998,1097,0.9529058116232465,0.86690975387420233,0.90787589498806687,1
+primary,reference,Attribute similarity means · no-cut greedy,amazon_googleproducts,left,4,single:Octen_Octen-Embedding-8B,selected,cv_nll,,attribute_cos:mean,greedy,pure_transitivity,null,0,847,1347,1300,0.62880475129918334,0.65153846153846151,0.63996977710615788,1
+primary,reference,Attribute similarity means · no-cut greedy,dblp_acm,right,1,all:family,selected,cv_nll,,attribute_cos:mean,greedy,pure_transitivity,null,0,2204,2225,2224,0.99056179775280895,0.99100719424460426,0.99078444594290849,1
+primary,reference,Attribute similarity means · no-cut greedy,dblp_scholar,left,6,single:tencent_KaLM-Embedding-Gemma3-12B-2511,selected,cv_nll,,attribute_cos:mean,greedy,pure_transitivity,null,0,2355,2572,5347,0.91562986003110425,0.44043388816158596,0.59477206718019948,1
+primary,reference,Attribute similarity means · no-cut greedy,fodors_zagats,right,1,all:family,selected,cv_nll,,attribute_cos:mean,greedy,pure_transitivity,null,0,112,217,112,0.5161290322580645,1,0.68085106382978722,1
+primary,reference,B-code · no-cut greedy,abt_buy,left,2,handcrafted,baseline,,B-code,legacy_posterior,greedy,pure_transitivity,null,0,706,942,1097,0.74946921443736725,0.64357338195077485,0.69249632172633646,1
+primary,reference,B-code · no-cut greedy,amazon_googleproducts,left,4,handcrafted,baseline,,B-code,legacy_posterior,greedy,pure_transitivity,null,0,816,1346,1300,0.60624071322436845,0.62769230769230766,0.6167800453514739,1
+primary,reference,B-code · no-cut greedy,dblp_acm,right,1,handcrafted,baseline,,B-code,legacy_posterior,greedy,pure_transitivity,null,0,2204,2225,2224,0.99056179775280895,0.99100719424460426,0.99078444594290849,1
+primary,reference,B-code · no-cut greedy,dblp_scholar,left,6,handcrafted,baseline,,B-code,legacy_posterior,greedy,pure_transitivity,null,0,2335,2569,5347,0.90891397430906973,0.43669347297550026,0.58994441637190498,1
+primary,reference,B-code · no-cut greedy,fodors_zagats,right,1,handcrafted,baseline,,B-code,legacy_posterior,greedy,pure_transitivity,null,0,111,217,112,0.51152073732718895,0.9910714285714286,0.67477203647416417,1
+primary,reference,B-code · posterior ≥ .5,abt_buy,left,2,handcrafted,baseline,,B-code,legacy_posterior,threshold,fixed,0.5,0,19,21,1097,0.90476190476190477,0.017319963536918871,0.033989266547406083,1
+primary,reference,B-code · posterior ≥ .5,amazon_googleproducts,left,4,handcrafted,baseline,,B-code,legacy_posterior,threshold,fixed,0.5,0,77,230,1300,0.33478260869565218,0.059230769230769233,0.10065359477124183,1
+primary,reference,B-code · posterior ≥ .5,dblp_acm,right,1,handcrafted,baseline,,B-code,legacy_posterior,threshold,fixed,0.5,0,2195,2220,2224,0.98873873873873874,0.98696043165467628,0.98784878487848782,1
+primary,reference,B-code · posterior ≥ .5,dblp_scholar,left,6,handcrafted,baseline,,B-code,legacy_posterior,threshold,fixed,0.5,0,1976,2005,5347,0.9855361596009975,0.36955302038526278,0.53754080522306857,1
+primary,reference,B-code · posterior ≥ .5,fodors_zagats,right,1,handcrafted,baseline,,B-code,legacy_posterior,threshold,fixed,0.5,0,104,104,112,1,0.9285714285714286,0.96296296296296291,1
+primary,reference,B-code · posterior ≥ .5 + greedy,abt_buy,left,2,handcrafted,baseline,,B-code,legacy_posterior,greedy,fixed,0.5,0,18,19,1097,0.94736842105263153,0.016408386508659983,0.032258064516129031,1
+primary,reference,B-code · posterior ≥ .5 + greedy,amazon_googleproducts,left,4,handcrafted,baseline,,B-code,legacy_posterior,greedy,fixed,0.5,0,49,95,1300,0.51578947368421058,0.037692307692307692,0.070250896057347675,1
+primary,reference,B-code · posterior ≥ .5 + greedy,dblp_acm,right,1,handcrafted,baseline,,B-code,legacy_posterior,greedy,fixed,0.5,0,2191,2202,2224,0.99500454132606719,0.98516187050359716,0.99005874378671488,1
+primary,reference,B-code · posterior ≥ .5 + greedy,dblp_scholar,left,6,handcrafted,baseline,,B-code,legacy_posterior,greedy,fixed,0.5,0,1878,1884,5347,0.99681528662420382,0.35122498597344304,0.51943023095007601,1
+primary,reference,B-code · posterior ≥ .5 + greedy,fodors_zagats,right,1,handcrafted,baseline,,B-code,legacy_posterior,greedy,fixed,0.5,0,104,104,112,1,0.9285714285714286,0.96296296296296291,1
+primary,reference,B-paper · no-cut greedy,abt_buy,left,2,handcrafted,baseline,,B-paper,legacy_posterior,greedy,pure_transitivity,null,0,364,875,1097,0.41599999999999998,0.33181403828623518,0.36916835699797163,1
+primary,reference,B-paper · no-cut greedy,amazon_googleproducts,left,4,handcrafted,baseline,,B-paper,legacy_posterior,greedy,pure_transitivity,null,0,673,1341,1300,0.50186428038777031,0.51769230769230767,0.50965543354789855,1
+primary,reference,B-paper · no-cut greedy,dblp_acm,right,1,handcrafted,baseline,,B-paper,legacy_posterior,greedy,pure_transitivity,null,0,2204,2225,2224,0.99056179775280895,0.99100719424460426,0.99078444594290849,1
+primary,reference,B-paper · no-cut greedy,dblp_scholar,left,6,handcrafted,baseline,,B-paper,legacy_posterior,greedy,pure_transitivity,null,0,2330,2575,5347,0.90485436893203886,0.43575836917897887,0.58823529411764708,1
+primary,reference,B-paper · no-cut greedy,fodors_zagats,right,1,handcrafted,baseline,,B-paper,legacy_posterior,greedy,pure_transitivity,null,0,112,217,112,0.5161290322580645,1,0.68085106382978722,1
+primary,reference,B-paper · posterior ≥ .5,abt_buy,left,2,handcrafted,baseline,,B-paper,legacy_posterior,threshold,fixed,0.5,0,162,378,1097,0.42857142857142855,0.14767547857793983,0.21966101694915255,1
+primary,reference,B-paper · posterior ≥ .5,amazon_googleproducts,left,4,handcrafted,baseline,,B-paper,legacy_posterior,threshold,fixed,0.5,0,217,597,1300,0.36348408710217756,0.16692307692307692,0.22878228782287824,1
+primary,reference,B-paper · posterior ≥ .5,dblp_acm,right,1,handcrafted,baseline,,B-paper,legacy_posterior,threshold,fixed,0.5,0,2167,2176,2224,0.99586397058823528,0.97437050359712229,0.98499999999999999,1
+primary,reference,B-paper · posterior ≥ .5,dblp_scholar,left,6,handcrafted,baseline,,B-paper,legacy_posterior,threshold,fixed,0.5,0,3946,4708,5347,0.83814783347493627,0.73798391621469983,0.78488314271506709,1
+primary,reference,B-paper · posterior ≥ .5,fodors_zagats,right,1,handcrafted,baseline,,B-paper,legacy_posterior,threshold,fixed,0.5,0,111,111,112,1,0.9910714285714286,0.99551569506726456,1
+primary,reference,B-paper · posterior ≥ .5 + greedy,abt_buy,left,2,handcrafted,baseline,,B-paper,legacy_posterior,greedy,fixed,0.5,0,104,205,1097,0.50731707317073171,0.094804010938924335,0.1597542242703533,1
+primary,reference,B-paper · posterior ≥ .5 + greedy,amazon_googleproducts,left,4,handcrafted,baseline,,B-paper,legacy_posterior,greedy,fixed,0.5,0,138,308,1300,0.44805194805194803,0.10615384615384615,0.17164179104477612,1
+primary,reference,B-paper · posterior ≥ .5 + greedy,dblp_acm,right,1,handcrafted,baseline,,B-paper,legacy_posterior,greedy,fixed,0.5,0,2164,2167,2224,0.99861559760036922,0.9730215827338129,0.98565247096333408,1
+primary,reference,B-paper · posterior ≥ .5 + greedy,dblp_scholar,left,6,handcrafted,baseline,,B-paper,legacy_posterior,greedy,fixed,0.5,0,2190,2244,5347,0.97593582887700536,0.4095754628763793,0.57699907785535498,1
+primary,reference,B-paper · posterior ≥ .5 + greedy,fodors_zagats,right,1,handcrafted,baseline,,B-paper,legacy_posterior,greedy,fixed,0.5,0,111,111,112,1,0.9910714285714286,0.99551569506726456,1
+primary,reference,Embedding combinations · LLR ≥ 0,abt_buy,left,2,all:zmean,selected,cv_nll,,llr,threshold,fixed,0.0,0,932,1619,1097,0.57566399011735636,0.84958979033728355,0.68630338733431517,1
+primary,reference,Embedding combinations · LLR ≥ 0,amazon_googleproducts,left,4,all:zmean,selected,cv_nll,,llr,threshold,fixed,0.0,0,1101,3148,1300,0.34974587039390087,0.84692307692307689,0.49505395683453235,1
+primary,reference,Embedding combinations · LLR ≥ 0,dblp_acm,right,1,all:zmean,selected,cv_nll,,llr,threshold,fixed,0.0,0,2079,2087,2224,0.99616674652611403,0.93480215827338131,0.964509394572025,1
+primary,reference,Embedding combinations · LLR ≥ 0,dblp_scholar,left,6,all:zmean,selected,cv_nll,,llr,threshold,fixed,0.0,0,4606,5124,5347,0.89890710382513661,0.86141761735552647,0.87976315538152994,1
+primary,reference,Embedding combinations · LLR ≥ 0,fodors_zagats,right,1,retriever:pair,selected,cv_nll,,llr,threshold,fixed,0.0,0,109,110,112,0.99090909090909096,0.9732142857142857,0.98198198198198194,1
+primary,reference,Embedding combinations · LLR ≥ 0 + greedy,abt_buy,left,2,all:zmean,selected,cv_nll,,llr,greedy,fixed,0.0,0,886,921,1097,0.96199782844733983,0.80765724703737463,0.87809712586719524,1
+primary,reference,Embedding combinations · LLR ≥ 0 + greedy,amazon_googleproducts,left,4,all:mean,selected,cv_nll,,llr,greedy,fixed,0.0,0,809,1259,1300,0.64257347100873707,0.62230769230769234,0.63227823368503322,1
+primary,reference,Embedding combinations · LLR ≥ 0 + greedy,dblp_acm,right,1,all:zmean,selected,cv_nll,,llr,greedy,fixed,0.0,0,2077,2080,2224,0.99855769230769231,0.93390287769784175,0.9651486988847584,1
+primary,reference,Embedding combinations · LLR ≥ 0 + greedy,dblp_scholar,left,6,all:zmean,selected,cv_nll,,llr,greedy,fixed,0.0,0,2349,2379,5347,0.98738965952080704,0.43931176360576024,0.60807662438519283,1
+primary,reference,Embedding combinations · LLR ≥ 0 + greedy,fodors_zagats,right,1,retriever:pair,selected,cv_nll,,llr,greedy,fixed,0.0,0,109,109,112,1,0.9732142857142857,0.98642533936651589,1
+primary,reference,Embedding combinations · llr no-cut greedy,abt_buy,left,2,all:mean,selected,cv_nll,,llr,greedy,pure_transitivity,null,0,957,1000,1097,0.95699999999999996,0.87237921604375568,0.9127324749642346,1
+primary,reference,Embedding combinations · llr no-cut greedy,amazon_googleproducts,left,4,all:mean,selected,cv_nll,,llr,greedy,pure_transitivity,null,0,851,1348,1300,0.63130563798219586,0.6546153846153846,0.64274924471299089,1
+primary,reference,Embedding combinations · llr no-cut greedy,dblp_acm,right,1,all:zmean,selected,cv_nll,,llr,greedy,pure_transitivity,null,0,2206,2225,2224,0.99146067415730332,0.99190647482014394,0.99168352438750285,1
+primary,reference,Embedding combinations · llr no-cut greedy,dblp_scholar,left,6,all:zmean,selected,cv_nll,,llr,greedy,pure_transitivity,null,0,2367,2573,5347,0.91993781577924605,0.44267813727323735,0.59772727272727277,1
+primary,reference,Embedding combinations · llr no-cut greedy,fodors_zagats,right,1,retriever:pair,selected,cv_nll,,llr,greedy,pure_transitivity,null,0,112,217,112,0.5161290322580645,1,0.68085106382978722,1
+primary,reference,Embedding combinations · posterior no-cut greedy,abt_buy,left,2,all:mean,selected,cv_nll,,posterior,greedy,pure_transitivity,null,0,957,1000,1097,0.95699999999999996,0.87237921604375568,0.9127324749642346,1
+primary,reference,Embedding combinations · posterior no-cut greedy,amazon_googleproducts,left,4,all:mean,selected,cv_nll,,posterior,greedy,pure_transitivity,null,0,851,1348,1300,0.63130563798219586,0.6546153846153846,0.64274924471299089,1
+primary,reference,Embedding combinations · posterior no-cut greedy,dblp_acm,right,1,all:separate,selected,cv_nll,,posterior,greedy,pure_transitivity,null,0,2206,2225,2224,0.99146067415730332,0.99190647482014394,0.99168352438750285,1
+primary,reference,Embedding combinations · posterior no-cut greedy,dblp_scholar,left,6,all:zmean,selected,cv_nll,,posterior,greedy,pure_transitivity,null,0,2367,2573,5347,0.91993781577924605,0.44267813727323735,0.59772727272727277,1
+primary,reference,Embedding combinations · posterior no-cut greedy,fodors_zagats,right,1,retriever:pair,selected,cv_nll,,posterior,greedy,pure_transitivity,null,0,112,217,112,0.5161290322580645,1,0.68085106382978722,1
+primary,reference,Embedding combinations · posterior ≥ .5,abt_buy,left,2,all:zmean,selected,cv_nll,,posterior,threshold,fixed,0.5,0,962,1721,1097,0.55897733875653688,0.87693710118505008,0.6827537260468417,1
+primary,reference,Embedding combinations · posterior ≥ .5,amazon_googleproducts,left,4,all:zmean,selected,cv_nll,,posterior,threshold,fixed,0.5,0,1119,3224,1300,0.34708436724565755,0.86076923076923073,0.49469496021220161,1
+primary,reference,Embedding combinations · posterior ≥ .5,dblp_acm,right,1,all:zmean,selected,cv_nll,,posterior,threshold,fixed,0.5,0,2090,2098,2224,0.99618684461391804,0.93974820143884896,0.96714484035168902,1
+primary,reference,Embedding combinations · posterior ≥ .5,dblp_scholar,left,6,all:mean,selected,cv_nll,,posterior,threshold,fixed,0.5,0,4558,5029,5347,0.90634320938556368,0.85244062090892092,0.87856592135697764,1
+primary,reference,Embedding combinations · posterior ≥ .5,fodors_zagats,right,1,retriever:pair,selected,cv_nll,,posterior,threshold,fixed,0.5,0,109,109,112,1,0.9732142857142857,0.98642533936651589,1
+primary,reference,Embedding combinations · posterior ≥ .5 + greedy,abt_buy,left,2,all:zmean,selected,cv_nll,,posterior,greedy,fixed,0.5,0,912,948,1097,0.96202531645569622,0.83135824977210571,0.89193154034229827,1
+primary,reference,Embedding combinations · posterior ≥ .5 + greedy,amazon_googleproducts,left,4,all:mean,selected,cv_nll,,posterior,greedy,fixed,0.5,0,815,1268,1300,0.64274447949526814,0.62692307692307692,0.63473520249221183,1
+primary,reference,Embedding combinations · posterior ≥ .5 + greedy,dblp_acm,right,1,all:zmean,selected,cv_nll,,posterior,greedy,fixed,0.5,0,2088,2091,2224,0.99856527977044474,0.9388489208633094,0.96778679026651215,1
+primary,reference,Embedding combinations · posterior ≥ .5 + greedy,dblp_scholar,left,6,all:zmean,selected,cv_nll,,posterior,greedy,fixed,0.5,0,2346,2373,5347,0.98862199747155499,0.43875070132784738,0.60777202072538861,1
+primary,reference,Embedding combinations · posterior ≥ .5 + greedy,fodors_zagats,right,1,retriever:pair,selected,cv_nll,,posterior,greedy,fixed,0.5,0,109,109,112,1,0.9732142857142857,0.98642533936651589,1
+primary,reference,KaLM record cosine · no-cut greedy,abt_buy,left,2,all:family,selected,cv_nll,,record_cos:tencent_KaLM-Embedding-Gemma3-12B-2511,greedy,pure_transitivity,null,0,951,1001,1097,0.95004995004995008,0.86690975387420233,0.90657769304099145,1
+primary,reference,KaLM record cosine · no-cut greedy,amazon_googleproducts,left,4,all:family,selected,cv_nll,,record_cos:tencent_KaLM-Embedding-Gemma3-12B-2511,greedy,pure_transitivity,null,0,866,1348,1300,0.64243323442136502,0.66615384615384621,0.65407854984894265,1
+primary,reference,KaLM record cosine · no-cut greedy,dblp_acm,right,1,all:family,selected,cv_nll,,record_cos:tencent_KaLM-Embedding-Gemma3-12B-2511,greedy,pure_transitivity,null,0,2204,2225,2224,0.99056179775280895,0.99100719424460426,0.99078444594290849,1
+primary,reference,KaLM record cosine · no-cut greedy,dblp_scholar,left,6,all:family,selected,cv_nll,,record_cos:tencent_KaLM-Embedding-Gemma3-12B-2511,greedy,pure_transitivity,null,0,2369,2570,5347,0.92178988326848244,0.44305217879184589,0.59845901225211573,1
+primary,reference,KaLM record cosine · no-cut greedy,fodors_zagats,right,1,all:family,selected,cv_nll,,record_cos:tencent_KaLM-Embedding-Gemma3-12B-2511,greedy,pure_transitivity,null,0,112,217,112,0.5161290322580645,1,0.68085106382978722,1
+primary,reference,Record cosine/models or means · no-cut greedy,abt_buy,left,2,all:family,selected,cv_nll,,record_cos:tencent_KaLM-Embedding-Gemma3-12B-2511,greedy,pure_transitivity,null,0,951,1001,1097,0.95004995004995008,0.86690975387420233,0.90657769304099145,1
+primary,reference,Record cosine/models or means · no-cut greedy,amazon_googleproducts,left,4,all:family,selected,cv_nll,,record_cos:codefuse-ai_F2LLM-v2-4B,greedy,pure_transitivity,null,0,887,1347,1300,0.65850037119524873,0.68230769230769228,0.67019267094824331,1
+primary,reference,Record cosine/models or means · no-cut greedy,dblp_acm,right,1,all:family,selected,cv_nll,,record_cos:bge_large,greedy,pure_transitivity,null,0,2205,2225,2224,0.99101123595505614,0.9914568345323741,0.99123398516520567,1
+primary,reference,Record cosine/models or means · no-cut greedy,dblp_scholar,left,6,all:family,selected,cv_nll,,record_cos:e5_instruct,greedy,pure_transitivity,null,0,2375,2571,5347,0.9237650719564372,0.44417430334767161,0.59989896438494572,1
+primary,reference,Record cosine/models or means · no-cut greedy,fodors_zagats,right,1,all:family,selected,cv_nll,,record_cos:Octen_Octen-Embedding-8B,greedy,pure_transitivity,null,0,112,217,112,0.5161290322580645,1,0.68085106382978722,1
+primary,reference,Single embedding · LLR ≥ 0,abt_buy,left,2,single:codefuse-ai_F2LLM-v2-8B,selected,cv_nll,,llr,threshold,fixed,0.0,0,910,1469,1097,0.61946902654867253,0.82953509571558792,0.7092751363990647,1
+primary,reference,Single embedding · LLR ≥ 0,amazon_googleproducts,left,4,single:codefuse-ai_F2LLM-v2-8B,selected,cv_nll,,llr,threshold,fixed,0.0,0,1138,3162,1300,0.35989879822896903,0.87538461538461543,0.5100851636037651,1
+primary,reference,Single embedding · LLR ≥ 0,dblp_acm,right,1,single:nvidia_llama-embed-nemotron-8b,selected,cv_nll,,llr,threshold,fixed,0.0,0,2181,2201,2224,0.99091322126306225,0.98066546762589923,0.98576271186440678,1
+primary,reference,Single embedding · LLR ≥ 0,dblp_scholar,left,6,single:e5_instruct,selected,cv_nll,,llr,threshold,fixed,0.0,0,4728,5442,5347,0.86879823594266814,0.88423414999064898,0.87644823431272589,1
+primary,reference,Single embedding · LLR ≥ 0,fodors_zagats,right,1,single:e5_large_v2,selected,cv_nll,,llr,threshold,fixed,0.0,0,108,108,112,1,0.9642857142857143,0.98181818181818181,1
+primary,reference,Single embedding · LLR ≥ 0 + greedy,abt_buy,left,2,single:e5_instruct,selected,cv_nll,,llr,greedy,fixed,0.0,0,887,909,1097,0.97579757975797576,0.80856882406563357,0.88434695912263206,1
+primary,reference,Single embedding · LLR ≥ 0 + greedy,amazon_googleproducts,left,4,single:codefuse-ai_F2LLM-v2-8B,selected,cv_nll,,llr,greedy,fixed,0.0,0,846,1271,1300,0.66561762391817469,0.65076923076923077,0.65810968494749122,1
+primary,reference,Single embedding · LLR ≥ 0 + greedy,dblp_acm,right,1,single:nvidia_llama-embed-nemotron-8b,selected,cv_nll,,llr,greedy,fixed,0.0,0,2176,2184,2224,0.99633699633699635,0.97841726618705038,0.98729582577132491,1
+primary,reference,Single embedding · LLR ≥ 0 + greedy,dblp_scholar,left,6,single:e5_instruct,selected,cv_nll,,llr,greedy,fixed,0.0,0,2360,2393,5347,0.98620977852068537,0.44136899195810736,0.60981912144702843,1
+primary,reference,Single embedding · LLR ≥ 0 + greedy,fodors_zagats,right,1,single:e5_large_v2,selected,cv_nll,,llr,greedy,fixed,0.0,0,108,108,112,1,0.9642857142857143,0.98181818181818181,1
+primary,reference,Single embedding · llr no-cut greedy,abt_buy,left,2,single:e5_instruct,selected,cv_nll,,llr,greedy,pure_transitivity,null,0,970,1001,1097,0.96903096903096908,0.88422971741112122,0.92469018112488088,1
+primary,reference,Single embedding · llr no-cut greedy,amazon_googleproducts,left,4,single:codefuse-ai_F2LLM-v2-8B,selected,cv_nll,,llr,greedy,pure_transitivity,null,0,875,1347,1300,0.64959168522642907,0.67307692307692313,0.66112580279561772,1
+primary,reference,Single embedding · llr no-cut greedy,dblp_acm,right,1,single:Qwen_Qwen3-Embedding-4B,selected,cv_nll,,llr,greedy,pure_transitivity,null,0,2205,2225,2224,0.99101123595505614,0.9914568345323741,0.99123398516520567,1
+primary,reference,Single embedding · llr no-cut greedy,dblp_scholar,left,6,single:e5_instruct,selected,cv_nll,,llr,greedy,pure_transitivity,null,0,2375,2570,5347,0.92412451361867709,0.44417430334767161,0.59997473790577238,1
+primary,reference,Single embedding · llr no-cut greedy,fodors_zagats,right,1,single:e5_large_v2,selected,cv_nll,,llr,greedy,pure_transitivity,null,0,112,217,112,0.5161290322580645,1,0.68085106382978722,1
+primary,reference,Single embedding · posterior no-cut greedy,abt_buy,left,2,single:e5_instruct,selected,cv_nll,,posterior,greedy,pure_transitivity,null,0,970,1001,1097,0.96903096903096908,0.88422971741112122,0.92469018112488088,1
+primary,reference,Single embedding · posterior no-cut greedy,amazon_googleproducts,left,4,single:codefuse-ai_F2LLM-v2-8B,selected,cv_nll,,posterior,greedy,pure_transitivity,null,0,875,1347,1300,0.64959168522642907,0.67307692307692313,0.66112580279561772,1
+primary,reference,Single embedding · posterior no-cut greedy,dblp_acm,right,1,single:Qwen_Qwen3-Embedding-4B,selected,cv_nll,,posterior,greedy,pure_transitivity,null,0,2205,2225,2224,0.99101123595505614,0.9914568345323741,0.99123398516520567,1
+primary,reference,Single embedding · posterior no-cut greedy,dblp_scholar,left,6,single:e5_instruct,selected,cv_nll,,posterior,greedy,pure_transitivity,null,0,2375,2570,5347,0.92412451361867709,0.44417430334767161,0.59997473790577238,1
+primary,reference,Single embedding · posterior no-cut greedy,fodors_zagats,right,1,single:e5_large_v2,selected,cv_nll,,posterior,greedy,pure_transitivity,null,0,112,217,112,0.5161290322580645,1,0.68085106382978722,1
+primary,reference,Single embedding · posterior ≥ .5,abt_buy,left,2,single:codefuse-ai_F2LLM-v2-8B,selected,cv_nll,,posterior,threshold,fixed,0.5,0,935,1559,1097,0.5997434252726106,0.85232452142206017,0.70406626506024095,1
+primary,reference,Single embedding · posterior ≥ .5,amazon_googleproducts,left,4,single:codefuse-ai_F2LLM-v2-4B,selected,cv_nll,,posterior,threshold,fixed,0.5,0,1157,3295,1300,0.35113808801213958,0.89000000000000001,0.50359085963003269,1
+primary,reference,Single embedding · posterior ≥ .5,dblp_acm,right,1,single:nvidia_llama-embed-nemotron-8b,selected,cv_nll,,posterior,threshold,fixed,0.5,0,2193,2214,2224,0.99051490514905149,0.98606115107913672,0.9882830103650293,1
+primary,reference,Single embedding · posterior ≥ .5,dblp_scholar,left,6,single:Octen_Octen-Embedding-8B,selected,cv_nll,,posterior,threshold,fixed,0.5,0,4686,5293,5347,0.88532023427167961,0.87637927809986904,0.88082706766917296,1
+primary,reference,Single embedding · posterior ≥ .5,fodors_zagats,right,1,single:e5_large_v2,selected,cv_nll,,posterior,threshold,fixed,0.5,0,107,107,112,1,0.9553571428571429,0.97716894977168944,1
+primary,reference,Single embedding · posterior ≥ .5 + greedy,abt_buy,left,2,single:e5_instruct,selected,cv_nll,,posterior,greedy,fixed,0.5,0,907,929,1097,0.97631862217438103,0.8268003646308113,0.89536031589338594,1
+primary,reference,Single embedding · posterior ≥ .5 + greedy,amazon_googleproducts,left,4,single:codefuse-ai_F2LLM-v2-4B,selected,cv_nll,,posterior,greedy,fixed,0.5,0,853,1293,1300,0.65970610982211908,0.6561538461538462,0.65792518318549942,1
+primary,reference,Single embedding · posterior ≥ .5 + greedy,dblp_acm,right,1,single:nvidia_llama-embed-nemotron-8b,selected,cv_nll,,posterior,greedy,fixed,0.5,0,2188,2196,2224,0.99635701275045541,0.98381294964028776,0.99004524886877832,1
+primary,reference,Single embedding · posterior ≥ .5 + greedy,dblp_scholar,left,6,single:e5_instruct,selected,cv_nll,,posterior,greedy,fixed,0.5,0,2356,2386,5347,0.98742665549036046,0.44062090892089023,0.60933660933660938,1
+primary,reference,Single embedding · posterior ≥ .5 + greedy,fodors_zagats,right,1,single:e5_large_v2,selected,cv_nll,,posterior,greedy,fixed,0.5,0,107,107,112,1,0.9553571428571429,0.97716894977168944,1
+sensitivity,diagnostic,Hard EM diagnostic (MiniLM6) · best declared cut/decoder,abt_buy,,,single:minilm6,ablation,hard_em,,llr,greedy,fixed,-5.0,,,,,,,0.82504187188980826,4
+sensitivity,diagnostic,Hard EM diagnostic (MiniLM6) · best declared cut/decoder,amazon_googleproducts,,,single:minilm6,ablation,hard_em,,llr,greedy,fixed,-5.0,,,,,,,0.57874234371098598,4
+sensitivity,diagnostic,Hard EM diagnostic (MiniLM6) · best declared cut/decoder,dblp_acm,,,single:minilm6,ablation,hard_em,,posterior,greedy,fixed,0.5,,,,,,,0.98722776890095321,4
+sensitivity,diagnostic,Hard EM diagnostic (MiniLM6) · best declared cut/decoder,dblp_scholar,,,single:minilm6,ablation,hard_em,,posterior,threshold,fixed,0.75,,,,,,,0.75889219518400353,4
+sensitivity,diagnostic,Hard EM diagnostic (MiniLM6) · best declared cut/decoder,fodors_zagats,,,single:minilm6,ablation,hard_em,,llr,greedy,fixed,5.0,,,,,,,0.86694220530427424,3
+sensitivity,diagnostic,Hard EM diagnostic (MiniLM6) · posterior ≥ .5,abt_buy,,,single:minilm6,ablation,hard_em,,posterior,threshold,fixed,0.5,,,,,,,0.53227480209609379,4
+sensitivity,diagnostic,Hard EM diagnostic (MiniLM6) · posterior ≥ .5,amazon_googleproducts,,,single:minilm6,ablation,hard_em,,posterior,threshold,fixed,0.5,,,,,,,0.45172319037771813,4
+sensitivity,diagnostic,Hard EM diagnostic (MiniLM6) · posterior ≥ .5,dblp_acm,,,single:minilm6,ablation,hard_em,,posterior,threshold,fixed,0.5,,,,,,,0.83349673785022016,4
+sensitivity,diagnostic,Hard EM diagnostic (MiniLM6) · posterior ≥ .5,dblp_scholar,,,single:minilm6,ablation,hard_em,,posterior,threshold,fixed,0.5,,,,,,,0.75749080395640855,4
+sensitivity,diagnostic,Hard EM diagnostic (MiniLM6) · posterior ≥ .5,fodors_zagats,,,single:minilm6,ablation,hard_em,,posterior,threshold,fixed,0.5,,,,,,,0.57351405792832422,3
+sensitivity,diagnostic,Zero-fill diagnostic (MiniLM6) · best declared cut/decoder,abt_buy,,,single:minilm6,ablation,zero_fill,,llr,greedy,fixed,-5.0,,,,,,,0.64069699350491682,4
+sensitivity,diagnostic,Zero-fill diagnostic (MiniLM6) · best declared cut/decoder,amazon_googleproducts,,,single:minilm6,ablation,zero_fill,,llr,greedy,fixed,-5.0,,,,,,,0.49677951925501151,4
+sensitivity,diagnostic,Zero-fill diagnostic (MiniLM6) · best declared cut/decoder,dblp_acm,,,single:minilm6,ablation,zero_fill,,posterior,greedy,fixed,0.1,,,,,,,0.98384523167308313,4
+sensitivity,diagnostic,Zero-fill diagnostic (MiniLM6) · best declared cut/decoder,dblp_scholar,,,single:minilm6,ablation,zero_fill,,posterior,threshold,fixed,0.9,,,,,,,0.6412910555349296,4
+sensitivity,diagnostic,Zero-fill diagnostic (MiniLM6) · best declared cut/decoder,fodors_zagats,,,single:minilm6,ablation,zero_fill,,llr,greedy,fixed,5.0,,,,,,,0.88604758600987632,3
+sensitivity,diagnostic,Zero-fill diagnostic (MiniLM6) · posterior ≥ .5,abt_buy,,,single:minilm6,ablation,zero_fill,,posterior,threshold,fixed,0.5,,,,,,,0.35054882114567709,4
+sensitivity,diagnostic,Zero-fill diagnostic (MiniLM6) · posterior ≥ .5,amazon_googleproducts,,,single:minilm6,ablation,zero_fill,,posterior,threshold,fixed,0.5,,,,,,,0.073116423079013823,4
+sensitivity,diagnostic,Zero-fill diagnostic (MiniLM6) · posterior ≥ .5,dblp_acm,,,single:minilm6,ablation,zero_fill,,posterior,threshold,fixed,0.5,,,,,,,0.77390388211265171,4
+sensitivity,diagnostic,Zero-fill diagnostic (MiniLM6) · posterior ≥ .5,dblp_scholar,,,single:minilm6,ablation,zero_fill,,posterior,threshold,fixed,0.5,,,,,,,0.63296074578451245,4
+sensitivity,diagnostic,Zero-fill diagnostic (MiniLM6) · posterior ≥ .5,fodors_zagats,,,single:minilm6,ablation,zero_fill,,posterior,threshold,fixed,0.5,,,,,,,0.3868144027577009,3
+sensitivity,grid,Attribute similarity means · best declared cut/decoder,abt_buy,,,single:microsoft_harrier-oss-v1-27b,selected,cv_nll,,attribute_cos:mean,greedy,fixed,0.7,,,,,,,0.89577777803112424,4
+sensitivity,grid,Attribute similarity means · best declared cut/decoder,amazon_googleproducts,,,single:Octen_Octen-Embedding-8B,selected,cv_nll,,attribute_cos:mean,greedy,fixed,0.5,,,,,,,0.64500013145157598,4
+sensitivity,grid,Attribute similarity means · best declared cut/decoder,dblp_acm,,,single:st5_xl,selected,cv_nll,,attribute_cos:mean,greedy,fixed,0.9,,,,,,,0.99101777949172387,4
+sensitivity,grid,Attribute similarity means · best declared cut/decoder,dblp_scholar,,,single:tencent_KaLM-Embedding-Gemma3-12B-2511,selected,cv_nll,,attribute_cos:mean,threshold,fixed,0.9,,,,,,,0.77782375135199444,4
+sensitivity,grid,Attribute similarity means · best declared cut/decoder,fodors_zagats,,,all:family,selected,cv_nll,,attribute_cos:mean,greedy,fixed,0.9,,,,,,,0.96941896024464835,3
+sensitivity,grid,B-code · best declared cut/decoder,abt_buy,,,handcrafted,baseline,,B-code,legacy_posterior,threshold,fixed,0.1,,,,,,,0.04930460095560775,4
+sensitivity,grid,B-code · best declared cut/decoder,amazon_googleproducts,,,handcrafted,baseline,,B-code,legacy_posterior,threshold,fixed,0.1,,,,,,,0.082548557596194588,4
+sensitivity,grid,B-code · best declared cut/decoder,dblp_acm,,,handcrafted,baseline,,B-code,legacy_posterior,greedy,fixed,0.1,,,,,,,0.98914538633218652,4
+sensitivity,grid,B-code · best declared cut/decoder,dblp_scholar,,,handcrafted,baseline,,B-code,legacy_posterior,threshold,fixed,0.1,,,,,,,0.68592961162893973,4
+sensitivity,grid,B-code · best declared cut/decoder,fodors_zagats,,,handcrafted,baseline,,B-code,legacy_posterior,greedy,fixed,0.1,,,,,,,0.9630762260731679,3
+sensitivity,grid,B-paper · best declared cut/decoder,abt_buy,,,handcrafted,baseline,,B-paper,legacy_posterior,threshold,fixed,0.1,,,,,,,0.19503253806551918,4
+sensitivity,grid,B-paper · best declared cut/decoder,amazon_googleproducts,,,handcrafted,baseline,,B-paper,legacy_posterior,threshold,fixed,0.1,,,,,,,0.18825203546232577,4
+sensitivity,grid,B-paper · best declared cut/decoder,dblp_acm,,,handcrafted,baseline,,B-paper,legacy_posterior,greedy,fixed,0.1,,,,,,,0.93275036784480558,4
+sensitivity,grid,B-paper · best declared cut/decoder,dblp_scholar,,,handcrafted,baseline,,B-paper,legacy_posterior,threshold,fixed,0.1,,,,,,,0.71309917168614545,4
+sensitivity,grid,B-paper · best declared cut/decoder,fodors_zagats,,,handcrafted,baseline,,B-paper,legacy_posterior,greedy,fixed,0.1,,,,,,,0.99403427290198587,3
+sensitivity,grid,Embedding combinations · best declared cut/decoder,abt_buy,,,all:zmean,selected,cv_nll,,llr,greedy,fixed,-5.0,,,,,,,0.8988959533276768,4
+sensitivity,grid,Embedding combinations · best declared cut/decoder,amazon_googleproducts,,,all:mean,selected,cv_nll,,llr,greedy,fixed,-5.0,,,,,,,0.61904635430507571,4
+sensitivity,grid,Embedding combinations · best declared cut/decoder,dblp_acm,,,all:mean,selected,cv_nll,,posterior,greedy,fixed,0.5,,,,,,,0.9914988727334334,4
+sensitivity,grid,Embedding combinations · best declared cut/decoder,dblp_scholar,,,all:zmean,selected,cv_nll,,posterior,threshold,fixed,0.9,,,,,,,0.74624561973951631,4
+sensitivity,grid,Embedding combinations · best declared cut/decoder,fodors_zagats,,,retriever:pair,selected,cv_nll,,llr,greedy,fixed,5.0,,,,,,,0.9226875696434037,3
+sensitivity,grid,Record cosine/models or means · best declared cut/decoder,abt_buy,,,all:family,selected,cv_nll,,record_cos:tencent_KaLM-Embedding-Gemma3-12B-2511,greedy,fixed,0.3,,,,,,,0.90393548558381265,4
+sensitivity,grid,Record cosine/models or means · best declared cut/decoder,amazon_googleproducts,,,all:family,selected,cv_nll,,record_cos:codefuse-ai_F2LLM-v2-4B,greedy,fixed,0.5,,,,,,,0.66790477168225881,4
+sensitivity,grid,Record cosine/models or means · best declared cut/decoder,dblp_acm,,,all:family,selected,cv_nll,,record_cos:codefuse-ai_F2LLM-v2-8B,greedy,fixed,0.8,,,,,,,0.99166861565157749,4
+sensitivity,grid,Record cosine/models or means · best declared cut/decoder,dblp_scholar,,,all:family,selected,cv_nll,,record_cos:Qwen_Qwen3-Embedding-8B,threshold,fixed,0.9,,,,,,,0.81602073003548536,4
+sensitivity,grid,Record cosine/models or means · best declared cut/decoder,fodors_zagats,,,all:family,selected,cv_nll,,record_cos:codefuse-ai_F2LLM-v2-4B,greedy,fixed,0.8,,,,,,,0.98642533936651589,3
+sensitivity,grid,Single embedding · best declared cut/decoder,abt_buy,,,single:e5_large_v2,selected,cv_nll,,llr,greedy,fixed,-5.0,,,,,,,0.90323165340546319,4
+sensitivity,grid,Single embedding · best declared cut/decoder,amazon_googleproducts,,,single:codefuse-ai_F2LLM-v2-4B,selected,cv_nll,,llr,greedy,fixed,-5.0,,,,,,,0.63320391436149781,4
+sensitivity,grid,Single embedding · best declared cut/decoder,dblp_acm,,,single:e5_instruct,selected,cv_nll,,llr,greedy,fixed,-2.0,,,,,,,0.99251103491274217,4
+sensitivity,grid,Single embedding · best declared cut/decoder,dblp_scholar,,,single:microsoft_harrier-oss-v1-0.6b,selected,cv_nll,,posterior,threshold,fixed,0.5,,,,,,,0.78215448078552996,4
+sensitivity,grid,Single embedding · best declared cut/decoder,fodors_zagats,,,single:e5_large_v2,selected,cv_nll,,llr,greedy,fixed,-1.0,,,,,,,0.97547547547547542,3
+sensitivity,oracle,Exact score-threshold oracle · best scored method,abt_buy,,,single:microsoft_harrier-oss-v1-0.6b,selected,cv_nll,,llr,greedy,oracle_threshold,,,,,,,,0.91621905911727497,4
+sensitivity,oracle,Exact score-threshold oracle · best scored method,amazon_googleproducts,,,all:family,selected,cv_nll,,record_cos:codefuse-ai_F2LLM-v2-4B,greedy,oracle_threshold,,,,,,,,0.6683555475680929,4
+sensitivity,oracle,Exact score-threshold oracle · best scored method,dblp_acm,,,single:Qwen_Qwen3-Embedding-4B,selected,cv_nll,,llr,greedy,oracle_threshold,,,,,,,,0.99359400833065847,4
+sensitivity,oracle,Exact score-threshold oracle · best scored method,dblp_scholar,,,all:family,selected,cv_nll,,record_cos:e5_instruct,threshold,oracle_threshold,,,,,,,,0.83061317565412052,4
+sensitivity,oracle,Exact score-threshold oracle · best scored method,fodors_zagats,,,all:family,selected,cv_nll,,record_cos:e5_large_v2,greedy,oracle_threshold,,,,,,,,1,3
+sensitivity,reference,Attribute similarity means · no-cut greedy,abt_buy,,,single:microsoft_harrier-oss-v1-27b,selected,cv_nll,,attribute_cos:mean,greedy,pure_transitivity,null,,,,,,,0.89493837888662964,4
+sensitivity,reference,Attribute similarity means · no-cut greedy,amazon_googleproducts,,,single:Octen_Octen-Embedding-8B,selected,cv_nll,,attribute_cos:mean,greedy,pure_transitivity,null,,,,,,,0.6447327265442131,4
+sensitivity,reference,Attribute similarity means · no-cut greedy,dblp_acm,,,retriever:pair,selected,cv_nll,,attribute_cos:mean,greedy,pure_transitivity,null,,,,,,,0.98743654701618933,4
+sensitivity,reference,Attribute similarity means · no-cut greedy,dblp_scholar,,,single:tencent_KaLM-Embedding-Gemma3-12B-2511,selected,cv_nll,,attribute_cos:mean,greedy,pure_transitivity,null,,,,,,,0.59616626922463467,4
+sensitivity,reference,Attribute similarity means · no-cut greedy,fodors_zagats,,,single:codefuse-ai_F2LLM-v2-8B,selected,cv_nll,,attribute_cos:mean,greedy,pure_transitivity,null,,,,,,,0.66058906731840927,3
+sensitivity,reference,B-code · no-cut greedy,abt_buy,,,handcrafted,baseline,,B-code,legacy_posterior,greedy,pure_transitivity,null,,,,,,,0.66509501676059113,4
+sensitivity,reference,B-code · no-cut greedy,amazon_googleproducts,,,handcrafted,baseline,,B-code,legacy_posterior,greedy,pure_transitivity,null,,,,,,,0.57891635180570866,4
+sensitivity,reference,B-code · no-cut greedy,dblp_acm,,,handcrafted,baseline,,B-code,legacy_posterior,greedy,pure_transitivity,null,,,,,,,0.98620867372786258,4
+sensitivity,reference,B-code · no-cut greedy,dblp_scholar,,,handcrafted,baseline,,B-code,legacy_posterior,greedy,pure_transitivity,null,,,,,,,0.58861343556293122,4
+sensitivity,reference,B-code · no-cut greedy,fodors_zagats,,,handcrafted,baseline,,B-code,legacy_posterior,greedy,pure_transitivity,null,,,,,,,0.65347346608821932,3
+sensitivity,reference,B-code · posterior ≥ .5,abt_buy,,,handcrafted,baseline,,B-code,legacy_posterior,threshold,fixed,0.5,,,,,,,0.035211913493997785,4
+sensitivity,reference,B-code · posterior ≥ .5,amazon_googleproducts,,,handcrafted,baseline,,B-code,legacy_posterior,threshold,fixed,0.5,,,,,,,0.079681848545694836,4
+sensitivity,reference,B-code · posterior ≥ .5,dblp_acm,,,handcrafted,baseline,,B-code,legacy_posterior,threshold,fixed,0.5,,,,,,,0.91407924163973642,4
+sensitivity,reference,B-code · posterior ≥ .5,dblp_scholar,,,handcrafted,baseline,,B-code,legacy_posterior,threshold,fixed,0.5,,,,,,,0.67768962622430184,4
+sensitivity,reference,B-code · posterior ≥ .5,fodors_zagats,,,handcrafted,baseline,,B-code,legacy_posterior,threshold,fixed,0.5,,,,,,,0.95856587180788078,3
+sensitivity,reference,B-code · posterior ≥ .5 + greedy,abt_buy,,,handcrafted,baseline,,B-code,legacy_posterior,greedy,fixed,0.5,,,,,,,0.033973786734532552,4
+sensitivity,reference,B-code · posterior ≥ .5 + greedy,amazon_googleproducts,,,handcrafted,baseline,,B-code,legacy_posterior,greedy,fixed,0.5,,,,,,,0.058599560859359925,4
+sensitivity,reference,B-code · posterior ≥ .5 + greedy,dblp_acm,,,handcrafted,baseline,,B-code,legacy_posterior,greedy,fixed,0.5,,,,,,,0.98828657925202767,4
+sensitivity,reference,B-code · posterior ≥ .5 + greedy,dblp_scholar,,,handcrafted,baseline,,B-code,legacy_posterior,greedy,fixed,0.5,,,,,,,0.56491628160916063,4
+sensitivity,reference,B-code · posterior ≥ .5 + greedy,fodors_zagats,,,handcrafted,baseline,,B-code,legacy_posterior,greedy,fixed,0.5,,,,,,,0.96296296296296291,3
+sensitivity,reference,B-paper · no-cut greedy,abt_buy,,,handcrafted,baseline,,B-paper,legacy_posterior,greedy,pure_transitivity,null,,,,,,,0.33286880379537093,4
+sensitivity,reference,B-paper · no-cut greedy,amazon_googleproducts,,,handcrafted,baseline,,B-paper,legacy_posterior,greedy,pure_transitivity,null,,,,,,,0.53044538048076895,4
+sensitivity,reference,B-paper · no-cut greedy,dblp_acm,,,handcrafted,baseline,,B-paper,legacy_posterior,greedy,pure_transitivity,null,,,,,,,0.92983258680631431,4
+sensitivity,reference,B-paper · no-cut greedy,dblp_scholar,,,handcrafted,baseline,,B-paper,legacy_posterior,greedy,pure_transitivity,null,,,,,,,0.55806174364748584,4
+sensitivity,reference,B-paper · no-cut greedy,fodors_zagats,,,handcrafted,baseline,,B-paper,legacy_posterior,greedy,pure_transitivity,null,,,,,,,0.66082758848716294,3
+sensitivity,reference,B-paper · posterior ≥ .5,abt_buy,,,handcrafted,baseline,,B-paper,legacy_posterior,threshold,fixed,0.5,,,,,,,0.18607115988316039,4
+sensitivity,reference,B-paper · posterior ≥ .5,amazon_googleproducts,,,handcrafted,baseline,,B-paper,legacy_posterior,threshold,fixed,0.5,,,,,,,0.18674772545807738,4
+sensitivity,reference,B-paper · posterior ≥ .5,dblp_acm,,,handcrafted,baseline,,B-paper,legacy_posterior,threshold,fixed,0.5,,,,,,,0.85642683077550674,4
+sensitivity,reference,B-paper · posterior ≥ .5,dblp_scholar,,,handcrafted,baseline,,B-paper,legacy_posterior,threshold,fixed,0.5,,,,,,,0.7103225577061516,4
+sensitivity,reference,B-paper · posterior ≥ .5,fodors_zagats,,,handcrafted,baseline,,B-paper,legacy_posterior,threshold,fixed,0.5,,,,,,,0.98962933619814841,3
+sensitivity,reference,B-paper · posterior ≥ .5 + greedy,abt_buy,,,handcrafted,baseline,,B-paper,legacy_posterior,greedy,fixed,0.5,,,,,,,0.13942854479717531,4
+sensitivity,reference,B-paper · posterior ≥ .5 + greedy,amazon_googleproducts,,,handcrafted,baseline,,B-paper,legacy_posterior,greedy,fixed,0.5,,,,,,,0.16183125351614727,4
+sensitivity,reference,B-paper · posterior ≥ .5 + greedy,dblp_acm,,,handcrafted,baseline,,B-paper,legacy_posterior,greedy,fixed,0.5,,,,,,,0.93269322534504018,4
+sensitivity,reference,B-paper · posterior ≥ .5 + greedy,dblp_scholar,,,handcrafted,baseline,,B-paper,legacy_posterior,greedy,fixed,0.5,,,,,,,0.54810274587599717,4
+sensitivity,reference,B-paper · posterior ≥ .5 + greedy,fodors_zagats,,,handcrafted,baseline,,B-paper,legacy_posterior,greedy,fixed,0.5,,,,,,,0.99403427290198587,3
+sensitivity,reference,Embedding combinations · LLR ≥ 0,abt_buy,,,all:zmean,selected,cv_nll,,llr,threshold,fixed,0.0,,,,,,,0.53975336576420385,4
+sensitivity,reference,Embedding combinations · LLR ≥ 0,amazon_googleproducts,,,all:zmean,selected,cv_nll,,llr,threshold,fixed,0.0,,,,,,,0.45571501680127185,4
+sensitivity,reference,Embedding combinations · LLR ≥ 0,dblp_acm,,,all:mean,selected,cv_nll,,llr,threshold,fixed,0.0,,,,,,,0.9067879750658987,4
+sensitivity,reference,Embedding combinations · LLR ≥ 0,dblp_scholar,,,all:zmean,selected,cv_nll,,llr,threshold,fixed,0.0,,,,,,,0.7259765913393692,4
+sensitivity,reference,Embedding combinations · LLR ≥ 0,fodors_zagats,,,retriever:pair,selected,cv_nll,,llr,threshold,fixed,0.0,,,,,,,0.72549182126178324,3
+sensitivity,reference,Embedding combinations · LLR ≥ 0 + greedy,abt_buy,,,all:zmean,selected,cv_nll,,llr,greedy,fixed,0.0,,,,,,,0.8595221963454468,4
+sensitivity,reference,Embedding combinations · LLR ≥ 0 + greedy,amazon_googleproducts,,,all:zmean,selected,cv_nll,,llr,greedy,fixed,0.0,,,,,,,0.57966714380043183,4
+sensitivity,reference,Embedding combinations · LLR ≥ 0 + greedy,dblp_acm,,,all:mean,selected,cv_nll,,llr,greedy,fixed,0.0,,,,,,,0.99105569055073595,4
+sensitivity,reference,Embedding combinations · LLR ≥ 0 + greedy,dblp_scholar,,,all:zmean,selected,cv_nll,,llr,greedy,fixed,0.0,,,,,,,0.58534897768753469,4
+sensitivity,reference,Embedding combinations · LLR ≥ 0 + greedy,fodors_zagats,,,retriever:pair,selected,cv_nll,,llr,greedy,fixed,0.0,,,,,,,0.86922400952860901,3
+sensitivity,reference,Embedding combinations · llr no-cut greedy,abt_buy,,,all:zmean,selected,cv_nll,,llr,greedy,pure_transitivity,null,,,,,,,0.90894288951515267,4
+sensitivity,reference,Embedding combinations · llr no-cut greedy,amazon_googleproducts,,,all:mean,selected,cv_nll,,llr,greedy,pure_transitivity,null,,,,,,,0.64390174923212629,4
+sensitivity,reference,Embedding combinations · llr no-cut greedy,dblp_acm,,,all:mean,selected,cv_nll,,llr,greedy,pure_transitivity,null,,,,,,,0.9869383490161856,4
+sensitivity,reference,Embedding combinations · llr no-cut greedy,dblp_scholar,,,all:zmean,selected,cv_nll,,llr,greedy,pure_transitivity,null,,,,,,,0.5964411369689997,4
+sensitivity,reference,Embedding combinations · llr no-cut greedy,fodors_zagats,,,all:mean,selected,cv_nll,,llr,greedy,pure_transitivity,null,,,,,,,0.65782444505848758,3
+sensitivity,reference,Embedding combinations · posterior no-cut greedy,abt_buy,,,all:zmean,selected,cv_nll,,posterior,greedy,pure_transitivity,null,,,,,,,0.90894288951515267,4
+sensitivity,reference,Embedding combinations · posterior no-cut greedy,amazon_googleproducts,,,all:mean,selected,cv_nll,,posterior,greedy,pure_transitivity,null,,,,,,,0.64390174923212629,4
+sensitivity,reference,Embedding combinations · posterior no-cut greedy,dblp_acm,,,all:mean,selected,cv_nll,,posterior,greedy,pure_transitivity,null,,,,,,,0.9869935653287133,4
+sensitivity,reference,Embedding combinations · posterior no-cut greedy,dblp_scholar,,,all:zmean,selected,cv_nll,,posterior,greedy,pure_transitivity,null,,,,,,,0.59146193616224307,4
+sensitivity,reference,Embedding combinations · posterior no-cut greedy,fodors_zagats,,,all:mean,selected,cv_nll,,posterior,greedy,pure_transitivity,null,,,,,,,0.65782444505848758,3
+sensitivity,reference,Embedding combinations · posterior ≥ .5,abt_buy,,,all:zmean,selected,cv_nll,,posterior,threshold,fixed,0.5,,,,,,,0.54611066598965474,4
+sensitivity,reference,Embedding combinations · posterior ≥ .5,amazon_googleproducts,,,all:zmean,selected,cv_nll,,posterior,threshold,fixed,0.5,,,,,,,0.46077817153284517,4
+sensitivity,reference,Embedding combinations · posterior ≥ .5,dblp_acm,,,all:mean,selected,cv_nll,,posterior,threshold,fixed,0.5,,,,,,,0.93527237470902447,4
+sensitivity,reference,Embedding combinations · posterior ≥ .5,dblp_scholar,,,all:zmean,selected,cv_nll,,posterior,threshold,fixed,0.5,,,,,,,0.74036098989710963,4
+sensitivity,reference,Embedding combinations · posterior ≥ .5,fodors_zagats,,,retriever:pair,selected,cv_nll,,posterior,threshold,fixed,0.5,,,,,,,0.72570787786986202,3
+sensitivity,reference,Embedding combinations · posterior ≥ .5 + greedy,abt_buy,,,all:zmean,selected,cv_nll,,posterior,greedy,fixed,0.5,,,,,,,0.87263489919286463,4
+sensitivity,reference,Embedding combinations · posterior ≥ .5 + greedy,amazon_googleproducts,,,all:zmean,selected,cv_nll,,posterior,greedy,fixed,0.5,,,,,,,0.58460106310639015,4
+sensitivity,reference,Embedding combinations · posterior ≥ .5 + greedy,dblp_acm,,,all:mean,selected,cv_nll,,posterior,greedy,fixed,0.5,,,,,,,0.9914988727334334,4
+sensitivity,reference,Embedding combinations · posterior ≥ .5 + greedy,dblp_scholar,,,all:mean,selected,cv_nll,,posterior,greedy,fixed,0.5,,,,,,,0.58131315198118216,4
+sensitivity,reference,Embedding combinations · posterior ≥ .5 + greedy,fodors_zagats,,,retriever:pair,selected,cv_nll,,posterior,greedy,fixed,0.5,,,,,,,0.86861591332437971,3
+sensitivity,reference,KaLM record cosine · no-cut greedy,abt_buy,,,all:family,selected,cv_nll,,record_cos:tencent_KaLM-Embedding-Gemma3-12B-2511,greedy,pure_transitivity,null,,,,,,,0.90393548558381265,4
+sensitivity,reference,KaLM record cosine · no-cut greedy,amazon_googleproducts,,,all:family,selected,cv_nll,,record_cos:tencent_KaLM-Embedding-Gemma3-12B-2511,greedy,pure_transitivity,null,,,,,,,0.65212318309895867,4
+sensitivity,reference,KaLM record cosine · no-cut greedy,dblp_acm,,,all:family,selected,cv_nll,,record_cos:tencent_KaLM-Embedding-Gemma3-12B-2511,greedy,pure_transitivity,null,,,,,,,0.98810652467147686,4
+sensitivity,reference,KaLM record cosine · no-cut greedy,dblp_scholar,,,all:family,selected,cv_nll,,record_cos:tencent_KaLM-Embedding-Gemma3-12B-2511,greedy,pure_transitivity,null,,,,,,,0.59828017387989352,4
+sensitivity,reference,KaLM record cosine · no-cut greedy,fodors_zagats,,,all:family,selected,cv_nll,,record_cos:tencent_KaLM-Embedding-Gemma3-12B-2511,greedy,pure_transitivity,null,,,,,,,0.65985078751036197,3
+sensitivity,reference,Record cosine/models or means · no-cut greedy,abt_buy,,,all:family,selected,cv_nll,,record_cos:tencent_KaLM-Embedding-Gemma3-12B-2511,greedy,pure_transitivity,null,,,,,,,0.90393548558381265,4
+sensitivity,reference,Record cosine/models or means · no-cut greedy,amazon_googleproducts,,,all:family,selected,cv_nll,,record_cos:codefuse-ai_F2LLM-v2-4B,greedy,pure_transitivity,null,,,,,,,0.66615882068464349,4
+sensitivity,reference,Record cosine/models or means · no-cut greedy,dblp_acm,,,all:family,selected,cv_nll,,record_cos:tencent_KaLM-Embedding-Gemma3-12B-2511,greedy,pure_transitivity,null,,,,,,,0.98810652467147686,4
+sensitivity,reference,Record cosine/models or means · no-cut greedy,dblp_scholar,,,all:family,selected,cv_nll,,record_cos:e5_instruct,greedy,pure_transitivity,null,,,,,,,0.59903855042473331,4
+sensitivity,reference,Record cosine/models or means · no-cut greedy,fodors_zagats,,,all:family,selected,cv_nll,,record_cos:bge_large,greedy,pure_transitivity,null,,,,,,,0.66131975556030687,3
+sensitivity,reference,Single embedding · LLR ≥ 0,abt_buy,,,single:codefuse-ai_F2LLM-v2-8B,selected,cv_nll,,llr,threshold,fixed,0.0,,,,,,,0.55953935547349576,4
+sensitivity,reference,Single embedding · LLR ≥ 0,amazon_googleproducts,,,single:codefuse-ai_F2LLM-v2-4B,selected,cv_nll,,llr,threshold,fixed,0.0,,,,,,,0.47176971916597354,4
+sensitivity,reference,Single embedding · LLR ≥ 0,dblp_acm,,,single:e5_instruct,selected,cv_nll,,llr,threshold,fixed,0.0,,,,,,,0.9560178158354582,4
+sensitivity,reference,Single embedding · LLR ≥ 0,dblp_scholar,,,single:microsoft_harrier-oss-v1-0.6b,selected,cv_nll,,llr,threshold,fixed,0.0,,,,,,,0.76639490205335381,4
+sensitivity,reference,Single embedding · LLR ≥ 0,fodors_zagats,,,single:e5_large_v2,selected,cv_nll,,llr,threshold,fixed,0.0,,,,,,,0.9624280619796316,3
+sensitivity,reference,Single embedding · LLR ≥ 0 + greedy,abt_buy,,,single:e5_instruct,selected,cv_nll,,llr,greedy,fixed,0.0,,,,,,,0.86600224390980229,4
+sensitivity,reference,Single embedding · LLR ≥ 0 + greedy,amazon_googleproducts,,,single:codefuse-ai_F2LLM-v2-4B,selected,cv_nll,,llr,greedy,fixed,0.0,,,,,,,0.60270920390570559,4
+sensitivity,reference,Single embedding · LLR ≥ 0 + greedy,dblp_acm,,,single:e5_instruct,selected,cv_nll,,llr,greedy,fixed,0.0,,,,,,,0.99239400868793171,4
+sensitivity,reference,Single embedding · LLR ≥ 0 + greedy,dblp_scholar,,,single:Qwen_Qwen3-Embedding-8B,selected,cv_nll,,llr,greedy,fixed,0.0,,,,,,,0.60399653794160979,4
+sensitivity,reference,Single embedding · LLR ≥ 0 + greedy,fodors_zagats,,,single:e5_large_v2,selected,cv_nll,,llr,greedy,fixed,0.0,,,,,,,0.97078135217670092,3
+sensitivity,reference,Single embedding · llr no-cut greedy,abt_buy,,,single:microsoft_harrier-oss-v1-0.6b,selected,cv_nll,,llr,greedy,pure_transitivity,null,,,,,,,0.91590173107724338,4
+sensitivity,reference,Single embedding · llr no-cut greedy,amazon_googleproducts,,,single:codefuse-ai_F2LLM-v2-4B,selected,cv_nll,,llr,greedy,pure_transitivity,null,,,,,,,0.65656730050941592,4
+sensitivity,reference,Single embedding · llr no-cut greedy,dblp_acm,,,single:tencent_KaLM-Embedding-Gemma3-12B-2511,selected,cv_nll,,llr,greedy,pure_transitivity,null,,,,,,,0.98799736569063368,4
+sensitivity,reference,Single embedding · llr no-cut greedy,dblp_scholar,,,single:e5_instruct,selected,cv_nll,,llr,greedy,pure_transitivity,null,,,,,,,0.59836430229102155,4
+sensitivity,reference,Single embedding · llr no-cut greedy,fodors_zagats,,,single:codefuse-ai_F2LLM-v2-14B,selected,cv_nll,,llr,greedy,pure_transitivity,null,,,,,,,0.65469002673419585,3
+sensitivity,reference,Single embedding · posterior no-cut greedy,abt_buy,,,single:microsoft_harrier-oss-v1-0.6b,selected,cv_nll,,posterior,greedy,pure_transitivity,null,,,,,,,0.91590173107724338,4
+sensitivity,reference,Single embedding · posterior no-cut greedy,amazon_googleproducts,,,single:codefuse-ai_F2LLM-v2-4B,selected,cv_nll,,posterior,greedy,pure_transitivity,null,,,,,,,0.65656730050941592,4
+sensitivity,reference,Single embedding · posterior no-cut greedy,dblp_acm,,,single:tencent_KaLM-Embedding-Gemma3-12B-2511,selected,cv_nll,,posterior,greedy,pure_transitivity,null,,,,,,,0.98805260698791819,4
+sensitivity,reference,Single embedding · posterior no-cut greedy,dblp_scholar,,,single:st5_xl,selected,cv_nll,,posterior,greedy,pure_transitivity,null,,,,,,,0.59774541763213118,4
+sensitivity,reference,Single embedding · posterior no-cut greedy,fodors_zagats,,,single:codefuse-ai_F2LLM-v2-14B,selected,cv_nll,,posterior,greedy,pure_transitivity,null,,,,,,,0.65469002673419585,3
+sensitivity,reference,Single embedding · posterior ≥ .5,abt_buy,,,single:codefuse-ai_F2LLM-v2-8B,selected,cv_nll,,posterior,threshold,fixed,0.5,,,,,,,0.56631044578528811,4
+sensitivity,reference,Single embedding · posterior ≥ .5,amazon_googleproducts,,,single:Qwen_Qwen3-Embedding-4B,selected,cv_nll,,posterior,threshold,fixed,0.5,,,,,,,0.48092162098811697,4
+sensitivity,reference,Single embedding · posterior ≥ .5,dblp_acm,,,single:gtr_t5_large,selected,cv_nll,,posterior,threshold,fixed,0.5,,,,,,,0.96449846424396579,4
+sensitivity,reference,Single embedding · posterior ≥ .5,dblp_scholar,,,single:microsoft_harrier-oss-v1-0.6b,selected,cv_nll,,posterior,threshold,fixed,0.5,,,,,,,0.78215448078552996,4
+sensitivity,reference,Single embedding · posterior ≥ .5,fodors_zagats,,,single:e5_large_v2,selected,cv_nll,,posterior,threshold,fixed,0.5,,,,,,,0.96334216926351257,3
+sensitivity,reference,Single embedding · posterior ≥ .5 + greedy,abt_buy,,,single:e5_instruct,selected,cv_nll,,posterior,greedy,fixed,0.5,,,,,,,0.87799737765457808,4
+sensitivity,reference,Single embedding · posterior ≥ .5 + greedy,amazon_googleproducts,,,single:codefuse-ai_F2LLM-v2-4B,selected,cv_nll,,posterior,greedy,fixed,0.5,,,,,,,0.60331224282237017,4
+sensitivity,reference,Single embedding · posterior ≥ .5 + greedy,dblp_acm,,,single:e5_instruct,selected,cv_nll,,posterior,greedy,fixed,0.5,,,,,,,0.99244874285176743,4
+sensitivity,reference,Single embedding · posterior ≥ .5 + greedy,dblp_scholar,,,single:Qwen_Qwen3-Embedding-8B,selected,cv_nll,,posterior,greedy,fixed,0.5,,,,,,,0.60352174960802429,4
+sensitivity,reference,Single embedding · posterior ≥ .5 + greedy,fodors_zagats,,,single:e5_large_v2,selected,cv_nll,,posterior,greedy,fixed,0.5,,,,,,,0.96752047509614669,3

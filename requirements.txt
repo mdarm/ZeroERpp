@@ -1,0 +1,15 @@
+# Tested numerical environment: Python 3.10.12, Linux x86_64.
+numpy==1.26.4
+pandas==2.3.3
+scipy==1.15.3
+scikit-learn==1.7.2
+faiss-cpu==1.14.2
+networkx==3.4.2
+py-stringmatching==0.4.7
+optuna==4.7.0
+SQLAlchemy==2.0.48
+pyarrow==23.0.1
+joblib==1.5.3
+matplotlib==3.10.9
+tqdm==4.67.3
+threadpoolctl==3.6.0

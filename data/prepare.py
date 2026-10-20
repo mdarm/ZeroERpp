@@ -255,10 +255,39 @@ def _build_bank(dataset, side, k, ids, li, ri, models, raw_hashes, chunk_size=20
         print("Prepared similarities: {} {}".format(config.cell_name(dataset, side, k), model), flush=True)
 
 
-def prepare_inputs(scope="all", datasets=None, models=None, n_jobs=1):
-    """Materialize matching inputs for the primary, sensitivity or union cells."""
+def _validate_cells(cells):
+    """Normalize explicit candidate cells without changing their requested order."""
+    if not isinstance(cells, (list, tuple)) or not cells:
+        raise ValueError("cells must be a nonempty list of (dataset, side, k) entries")
+    validated = []
+    for cell in cells:
+        if not isinstance(cell, (list, tuple)) or len(cell) != 3:
+            raise ValueError("each cell must contain exactly (dataset, side, k)")
+        dataset, side, k = cell
+        if not isinstance(dataset, str) or dataset not in DATASETS:
+            raise ValueError("cell dataset must be one of " + ", ".join(DATASETS))
+        if side not in ("left", "right"):
+            raise ValueError("cell side must be left or right")
+        if isinstance(k, bool) or not isinstance(k, int) or k < 1:
+            raise ValueError("cell k must be a positive integer")
+        normalized = (dataset, side, k)
+        if normalized in validated:
+            raise ValueError("duplicate candidate cell: " + str(normalized))
+        validated.append(normalized)
+    return validated
+
+
+def prepare_inputs(scope="all", datasets=None, models=None, n_jobs=1, cells=None,
+                   include_strings=True):
+    """Materialize matching inputs for publication or explicitly selected cells.
+
+    Explicit cells replace scope/datasets selection. Embedding-only experiments
+    can skip string extraction while retaining identical candidate-bank inputs.
+    """
     from exp import blocking
-    cells = select_cells(scope, datasets)
+    cells = select_cells(scope, datasets) if cells is None else _validate_cells(cells)
+    if not isinstance(include_strings, bool):
+        raise ValueError("include_strings must be a boolean")
     models = list(MODELS if models is None else models)
     if not models or len(set(models)) != len(models) or set(models) - set(MODELS):
         raise ValueError("models must select distinct frozen model stems")
@@ -289,7 +318,8 @@ def prepare_inputs(scope="all", datasets=None, models=None, n_jobs=1):
             child_metadata = dict(metadata, k=requested, source_k=k)
             if not _reusable(target, child_metadata):
                 _write_frame(selected, target, child_metadata)
-        _build_strings(dataset, side, k, ids, li, ri, len(tables[0]), raw_hashes, n_jobs)
+        if include_strings:
+            _build_strings(dataset, side, k, ids, li, ri, len(tables[0]), raw_hashes, n_jobs)
         _build_bank(dataset, side, k, ids, li, ri, models, raw_hashes)
         print("Prepared {}".format(config.cell_name(dataset, side, k)), flush=True)
     return [config.cell_name(*cell) for cell in cells]

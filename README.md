@@ -77,6 +77,6 @@ Infrastructure used:
   and `r6i.8xlarge` (32 vCPUs, 256 GB RAM), both running Ubuntu 20.04.6 LTS.
 - Embedding creation: KVM VM with AMD EPYC 9B45 (48 vCPUs), 181 GB RAM, and
   NVIDIA RTX PRO 6000 Blackwell with 96 GB VRAM.
-- All stages except embedding creation were also run on this laptop: Lenovo
+- All stages except embedding creation were also successfully run on a Lenovo
   ThinkPad T16 Gen 3, Intel Core Ultra 5 135U (12 cores, 14 threads), 32 GB RAM,
   Ubuntu 22.04.5 LTS. The Docker environment uses Python 3.10 and fixed dependency versions.

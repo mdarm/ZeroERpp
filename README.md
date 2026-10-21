@@ -30,25 +30,23 @@ Outputs are saved under `results/runs/`: experiment databases, generated feature
 `reports/`, and `magellan_feature_timings.csv`. Completed work resumes with the same
 code and inputs; after code changes, use a fresh `--output-dir`.
 
-The experiments use five datasets and twenty text-embedding models. Matching is
-tested on 22 sets of possible record pairs: five for the main comparison and nineteen
-to check the effect of changing which pairs are compared (two sets overlap). Each set
-specifies a dataset, which table supplies the search queries, and how many nearest
-neighbours are kept per record.
+The experiments use five datasets and twenty embedding models. Matching is evaluated
+on 22 candidate-pair sets (each defined by the dataset, the table supplying search
+queries, and the number of nearest neighbours retained per record): five for the main
+comparison and nineteen for sensitivity analysis, with two sets shared.
 
-For each set, 27 ways of constructing similarity features are compared: twenty
-individual embedding models and seven combinations. Within each choice, settings are chosen by
-minimising negative log-likelihood (NLL), which measures how poorly the model explains
-the validation pairs, without consulting known correct matches. Training and
-validation share no records within any of the three splits. Reported model rankings
-and best-possible score thresholds use known correct matches; applying predefined
-decision rules does not.
+For each candidate set, we evaluate 27 feature configurations: twenty individual
+embedding models and seven combinations. Hyperparameters are selected within each
+feature configuration by minimising marginal validation negative log-likelihood
+(NLL) across three record-disjoint train/validation splits. Reported model rankings
+and exact threshold optima use ground-truth labels; fixed decision rules do not.
 
-Measurements run one at a time on one CPU thread. Fitted matching methods and direct
-cosine-similarity comparisons are timed three times; the original string-based methods
-are timed once. Magellan string features are also computed afresh once for each of
-the 22 pair sets. Embedding creation and candidate-pair selection are excluded from
-matching times.
+Timings use serial execution with one CPU thread. Each fitted matching method and
+direct cosine-similarity baseline is benchmarked in three repetitions with the same
+inputs; reports use the median runtime to reduce the effect of run-to-run variation.
+The original string baselines are timed once on Fodors–Zagats `right/k1`. A separate
+benchmark times fresh Magellan feature generation once for each of the 22 candidate
+sets. Embedding generation and blocking are excluded from matching times.
 
 Verification compares match counts, chosen settings, and accuracy against the saved
 results. It also checks timing coverage for 593 successful model fits, direct cosine

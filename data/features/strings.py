@@ -289,27 +289,3 @@ def build_zeroer_features(pairs, entities: pd.DataFrame, attributes,
     if drop_zero_variance:
         fm = fm.loc[:, fm.nunique() > 1]
     return fm
-
-
-if __name__ == '__main__':
-    entities = pd.DataFrame({
-        'id':    [0, 1, 2, 3, 4, 5],
-        'name':  ['Sony Vaio Laptop', 'Sony Viao Laptop', 'Dell XPS 13',
-                  'Apple MacBook Pro 16 inch retina display model',
-                  'apple macbook pro 16 inch retina display model',
-                  'Dell XPS 13'],
-        'brand': ['Sony', 'Sony', 'Dell', 'Apple', 'Apple', 'Dell'],
-        'price': ['999', '999', '1200', '1999', 'nan', '1200'],
-    })
-    pairs = [(0, 1), (0, 2), (2, 5), (3, 4), (1, 1)]
-    attrs = ['name', 'brand', 'price']
-
-    for a in attrs:
-        print(f'{a:6s} -> inferred type: '
-              f'{infer_attr_type(_as_read_csv(entities[a]))}')
-    print()
-
-    fm = build_zeroer_features(pairs, entities, attrs)
-    pd.set_option('display.width', 240, 'display.max_columns', 60)
-    print('shape:', fm.shape)
-    print(fm.round(3).T)

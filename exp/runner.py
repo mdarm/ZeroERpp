@@ -224,16 +224,6 @@ def _store_decisions(storage, study, number, rows, curves):
              zlib.compress(_json(curve).encode())) for score_name, decoder, curve in curves])
 
 
-def load_threshold_curve(storage, study_name, trial_number, score_name, decoder):
-    with sqlite3.connect(_database(storage)) as connection:
-        row = connection.execute("""SELECT curve FROM unsupervised_thresholds
-            WHERE study_name=? AND trial_number=? AND score_name=? AND decoder=?""",
-            (study_name, trial_number, score_name, decoder)).fetchone()
-    if row is None:
-        raise KeyError((study_name, trial_number, score_name, decoder))
-    return pd.DataFrame(json.loads(zlib.decompress(row[0])))
-
-
 def select_best_trial(study):
     """Return the finite completed NLL minimum, breaking ties by trial number."""
     candidates = [trial for trial in study.trials if trial.state == TrialState.COMPLETE
@@ -243,22 +233,9 @@ def select_best_trial(study):
     return min(candidates, key=lambda trial: (trial.value, trial.number))
 
 
-def _artifact_sha256(path):
-    digest = sha256()
-    with Path(path).open("rb") as stream:
-        for block in iter(lambda: stream.read(1024 * 1024), b""):
-            digest.update(block)
-    return digest.hexdigest()
-
-
 def run_refit(study, storage, thresholds, output_dir, config_override=None, selection="cv_nll",
-              retry_failed=False, evaluate=True, save_predictor=False):
-    """Refit the label-free winner, optionally evaluate and save its predictor.
-
-    ``evaluate=False`` never opens match labels or writes label-based decision
-    tables. ``save_predictor=True`` persists the fitted transformation and model
-    together, so prediction requires neither refitting nor gold labels.
-    """
+              retry_failed=False):
+    """Refit the label-free winner, then evaluate the frozen decision rules."""
     _database(storage)
     if isinstance(study, str):
         study = optuna.load_study(study_name=study, storage=_storage(storage))
@@ -268,24 +245,16 @@ def run_refit(study, storage, thresholds, output_dir, config_override=None, sele
     policy = dict(source_protocol=study.user_attrs["protocol_hash"], source_trial=selected.number,
                   thresholds=thresholds, decoder_policy="threshold-and-greedy-no-evidence-abstain-v1",
                   code_hash=_code_hash(), config_override=config_override or {}, selection=selection,
-                  evaluate=bool(evaluate), save_predictor=bool(save_predictor))
+                  evaluate=True, save_predictor=False)
     refit_hash = _hash(policy)
     suffix = "_full" if not config_override and selection == "cv_nll" else "_{}_full".format(
         re.sub(r"[^A-Za-z0-9_.-]+", "-", selection))
     full = optuna.create_study(study_name=study.study_name + suffix, storage=_storage(storage),
                                direction="minimize", load_if_exists=True)
     if full.user_attrs.get("refit_hash", refit_hash) != refit_hash:
-        raise ValueError("Refit selection or threshold policy changed, including evaluation/artifact options; "
-                         "use a new experiment name")
+        raise ValueError("Refit selection, threshold policy or code changed; use a new experiment name")
     complete = [trial for trial in full.trials if trial.state == TrialState.COMPLETE]
     if complete:
-        if save_predictor:
-            for artifact in ("scores", "predictor"):
-                path = complete[-1].user_attrs.get(artifact + "_path")
-                expected = complete[-1].user_attrs.get(artifact + "_sha256")
-                if not path or not Path(path).is_file() or _artifact_sha256(path) != expected:
-                    raise ValueError("Completed refit {} artifact is missing or changed; "
-                                     "use a new experiment name".format(artifact))
         return full
     if any(trial.state == TrialState.FAIL for trial in full.trials) and not retry_failed:
         return full
@@ -293,8 +262,8 @@ def run_refit(study, storage, thresholds, output_dir, config_override=None, sele
                            dataset=spec["dataset"], side=spec["side"], k=spec["k"],
                            panel_name=study.user_attrs["panel_name"], experiment=spec["experiment"],
                            role="ablation" if config_override else "selected", selection=selection,
-                           source_study_name=study.study_name, evaluate=bool(evaluate),
-                           save_predictor=bool(save_predictor)).items():
+                           source_study_name=study.study_name, evaluate=True,
+                           save_predictor=False).items():
         full.set_user_attr(key, value)
     start = perf_counter()
     panel = spec["panel"]
@@ -303,30 +272,29 @@ def run_refit(study, storage, thresholds, output_dir, config_override=None, sele
     if cell["input_hash"] != spec["input_hash"] or _code_hash() != spec["code_hash"]:
         raise ValueError("Inputs or code changed since selection; rerun under a new experiment name")
     try:
-        predictor = ZeroEREstimator(panel, config).fit(
+        estimator = ZeroEREstimator(panel, config).fit(
             cell["pairs"], cell["bank"], cell["present"], attributes=cell["attributes"])
-        features, scores = predictor.features_, predictor.scores_
-        attrs = dict(predictor.diagnostics_)
+        features, scores = estimator.features_, estimator.scores_
+        attrs = dict(estimator.diagnostics_)
         preprocessing_seconds = attrs["preprocessing_seconds"]
     except (RuntimeError, ValueError, np.linalg.LinAlgError, FloatingPointError) as error:
         full.add_trial(optuna.trial.create_trial(params=config, distributions=_distributions({selection: config}),
             state=TrialState.FAIL, user_attrs=dict(error=repr(error), selection=selection,
                 source_study=study.study_name, source_trial=selected.number, config_hash=_hash(config),
-                evaluate=bool(evaluate), save_predictor=bool(save_predictor),
+                evaluate=True, save_predictor=False,
                 seconds=perf_counter() - start)))
         return full
     observed, _ = _observed(cell["present"], features.columns)
     eligible = observed.any(axis=1)
     p_match = np.asarray(scores["p_match"])
-    attrs.update(candset_size=len(cell["ids"]), evaluate=bool(evaluate), save_predictor=bool(save_predictor))
-    if evaluate:
-        # Gold is first opened here, after model/configuration selection and refitting.
-        is_gold, n_gold = _load_gold(spec["dataset"], cell["ids"])
-        clipped = np.clip(p_match, 1e-15, 1 - 1e-15)
-        attrs.update(brier=float(np.mean((p_match - is_gold) ** 2)),
-                     label_log_loss=float(-np.mean(is_gold * np.log(clipped) + (~is_gold) * np.log1p(-clipped))),
-                     calibration_population="candidate pairs", n_gold=n_gold,
-                     tp_blocking=int(is_gold.sum()))
+    attrs.update(candset_size=len(cell["ids"]), evaluate=True, save_predictor=False)
+    # Gold is first opened here, after model/configuration selection and refitting.
+    is_gold, n_gold = _load_gold(spec["dataset"], cell["ids"])
+    clipped = np.clip(p_match, 1e-15, 1 - 1e-15)
+    attrs.update(brier=float(np.mean((p_match - is_gold) ** 2)),
+                 label_log_loss=float(-np.mean(is_gold * np.log(clipped) + (~is_gold) * np.log1p(-clipped))),
+                 calibration_population="candidate pairs", n_gold=n_gold,
+                 tp_blocking=int(is_gold.sum()))
     score_specs = [("llr", scores["llr"], eligible), ("posterior", p_match, eligible)]
     score_specs += list(_baselines(cell, panel))
     decisions, curves = [], []
@@ -335,34 +303,25 @@ def run_refit(study, storage, thresholds, output_dir, config_override=None, sele
         saved[name] = scores[name]
     saved["eligible"] = eligible
     for name, values, valid in score_specs:
-        if evaluate:
-            cuts = thresholds[name if name in ("llr", "posterior") else "cosine"]
-            decisions.extend(decision_rows(cell["pairs"], values, is_gold, n_gold, name, cuts, eligible=valid))
-            for decoder in ("threshold", "greedy"):
-                curves.append((name, decoder, threshold_curve(cell["pairs"], values, is_gold, n_gold,
-                                                              decoder=decoder, eligible=valid)))
+        cuts = thresholds[name if name in ("llr", "posterior") else "cosine"]
+        decisions.extend(decision_rows(cell["pairs"], values, is_gold, n_gold, name, cuts, eligible=valid))
+        for decoder in ("threshold", "greedy"):
+            curves.append((name, decoder, threshold_curve(cell["pairs"], values, is_gold, n_gold,
+                                                          decoder=decoder, eligible=valid)))
         saved[name if name != "posterior" else "p_match"] = values
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     path = output_dir / (full.study_name + "__" + refit_hash[:12] + ".parquet")
     saved.to_parquet(path, index=False)
-    if save_predictor:
-        predictor_path = path.with_suffix(".pkl")
-        predictor.save(predictor_path)
-        attrs.update(predictor_path=str(predictor_path.resolve()),
-                     predictor_sha256=_artifact_sha256(predictor_path),
-                     scores_sha256=_artifact_sha256(path))
     attrs.update(selection=selection, source_study=study.study_name, source_trial=selected.number,
                  config_hash=_hash(config), validation_nll=selected.value,
                  scores_path=str(path.resolve()),
                  preprocessing_seconds=preprocessing_seconds, load_timings=cell.get("timings", {}),
                  seconds=perf_counter() - start)
-    if evaluate:
-        attrs["decisions"] = decisions
+    attrs["decisions"] = decisions
     _json(attrs)  # Reject invalid numeric values before persisting a completed result.
     number = len(full.trials)
-    if evaluate:
-        _store_decisions(storage, full, number, decisions, curves)
+    _store_decisions(storage, full, number, decisions, curves)
     full.add_trial(optuna.trial.create_trial(params=config, distributions=_distributions({selection: config}),
                                             value=selected.value, user_attrs=attrs))
     return full

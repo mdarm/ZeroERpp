@@ -121,26 +121,3 @@ class ZeroERMatcher:
         self.execution_time = time.time() - em_t0
         return self.pairs
 
-    def posterior_frame(self) -> pd.DataFrame:
-        """All candidate row IDs with legacy probabilities, without gold labels."""
-        if self.posteriors is None:
-            raise RuntimeError("no posteriors yet — run match_pairs()")
-        return pd.DataFrame({
-            "id1": [int(a) for a, _ in self.candidate_pairs],
-            "id2": [int(b) for _, b in self.candidate_pairs],
-            "p_match": self.posteriors,
-        })
-
-    def _configuration(self) -> dict:
-        return {
-            "c_bay": self.c_bay,
-            "max_iter": self.max_iter,
-            "init_threshold": self.init_threshold,
-            "tol": self.tol,
-            "transitivity": self.transitivity,
-            "pi_M": self.pi_M,
-            "hard": self.hard,
-            "init_statistic": self.init_statistic,
-            "missing": self.missing,
-        }
-

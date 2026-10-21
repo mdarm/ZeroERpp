@@ -24,7 +24,6 @@ bay_coeff, getScaledSum
     Pure helpers used inside the M-step / initialisation.
 """
 
-import pickle
 from collections import defaultdict
 
 import numpy as np
@@ -409,32 +408,6 @@ class ZeroerModel:
                     p_match=p_match, log_density=log_density,
                     n_blocks=n_blocks, pi=pi)
 
-    def score_samples(self, X, present=None):
-        """Per-row marginal log density under the final fitted mixture."""
-        return self.score_components(X, present=present)["log_density"]
-
-    def predict_PM(self, X_test):
-        reg_cov = 1e-8 * np.identity(len(self.X[0]))
-        self.Cov_M += reg_cov
-        self.Cov_U += reg_cov
-        min_eig = np.min(np.real(np.linalg.eigvals(self.Cov_M)))
-        if min_eig < 0:
-            self.Cov_M -= 10 * min_eig * np.eye(*self.Cov_M.shape)
-        min_eig = np.min(np.real(np.linalg.eigvals(self.Cov_U)))
-        if min_eig < 0:
-            self.Cov_U -= 10 * min_eig * np.eye(*self.Cov_U.shape)
-        log_prods_dup = multivariate_normal.logpdf(X_test, mean=self.Mu_M, cov=self.Cov_M)
-        log_prods_non_dup = multivariate_normal.logpdf(X_test, mean=self.Mu_U, cov=self.Cov_U)
-
-        pi_M = self.pi_M
-        pi_U = 1 - pi_M
-
-        prob_non_dup_over_dup = np.exp(np.clip(log_prods_non_dup - log_prods_dup, -500, 500))
-
-        P_M_test = pi_M / (pi_M + pi_U * prob_non_dup_over_dup)
-        P_M_test = np.round(np.clip(P_M_test, 0., 1.))
-        return P_M_test
-
     def enforce_transitivity(self, P_M, ids, id_tuple_to_index, model_l, model_r,
                              LR_dup_free=False, LR_identical=False):
         model_l_P_M = None
@@ -645,13 +618,6 @@ class ZeroerModel:
         if delta > 0.00001:
             return -1e200
         return delta
-
-    def save_model(self, filepath):
-        pickle.dump(self, open(filepath, 'wb'))
-
-    @staticmethod
-    def load_model(filepath):
-        return pickle.load(open(filepath, 'rb'))
 
     @classmethod
     def run_em(cls, similarity_matrixs, feature_names, y_inits, id_dfs,

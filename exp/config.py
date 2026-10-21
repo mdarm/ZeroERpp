@@ -17,6 +17,8 @@ FEATURES_DIR = join(OUTPUT_DIR, "magellan-features")
 BANK_DIR = join(OUTPUT_DIR, "cosine_bank")
 STORAGE = "sqlite:///" + join(OUTPUT_DIR, "optuna.db")
 UNSUPERVISED_STORAGE = "sqlite:///" + join(OUTPUT_DIR, "optuna_unsupervised.db")
+# Fresh string-feature timings for every cell stay outside the published timing coverage.
+FEATURE_TIMING_STORAGE = "sqlite:///" + join(OUTPUT_DIR, "magellan_timings.db")
 # A reserved path used by the runtime's guard against accidental legacy writes.
 MATCHING_STORAGE = "sqlite:///" + join(OUTPUT_DIR, "optuna_matching.db")
 

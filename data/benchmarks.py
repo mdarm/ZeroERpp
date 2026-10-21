@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import glob
 import os
 from typing import Tuple
 from dataclasses import dataclass, field
@@ -10,7 +9,7 @@ from dataclasses import dataclass, field
 import numpy as np
 import pandas as pd
 
-from exp.config import ATTR_DIR, BENCH_DIR, EMB_DIR, RECORD_DIR
+from exp.config import BENCH_DIR, RECORD_DIR
 
 # Matchable attributes and renames that align the two tables on shared names:
 #   - fodors_zagats: 'type'/'class' dropped — 'class' is a ground-truth leak.
@@ -30,7 +29,7 @@ DATASETS = {
 DROP_GROUPS = {"fodors_zagats": ["type", "class"]}
 
 
-# Encoder families and parameter counts (millions), shared by fusion and reporting.
+# Encoder families used by panel fusion.
 FAMILIES = {
     "classic": ["minilm6", "minilm12", "mpnet", "distilroberta"],
     "t5": ["st5_xl", "gtr_t5_large"],
@@ -41,33 +40,6 @@ FAMILIES = {
             "microsoft_harrier-oss-v1-0.6b", "microsoft_harrier-oss-v1-27b",
             "tencent_KaLM-Embedding-Gemma3-12B-2511"],
 }
-
-PARAMETERS_M = {
-    "minilm6": 22, "minilm12": 33, "distilroberta": 82, "mpnet": 110,
-    "gtr_t5_large": 335, "st5_xl": 1240,
-    "bge_large": 335, "e5_large_v2": 335, "gte_large": 335, "e5_instruct": 560,
-    "microsoft_harrier-oss-v1-0.6b": 600,
-    "Qwen_Qwen3-Embedding-4B": 4000, "codefuse-ai_F2LLM-v2-4B": 4000,
-    "Qwen_Qwen3-Embedding-8B": 8000, "codefuse-ai_F2LLM-v2-8B": 8000,
-    "Octen_Octen-Embedding-8B": 8000, "nvidia_llama-embed-nemotron-8b": 8000,
-    "tencent_KaLM-Embedding-Gemma3-12B-2511": 12000, "codefuse-ai_F2LLM-v2-14B": 14000,
-    "microsoft_harrier-oss-v1-27b": 27000,
-}
-
-
-def embedding_models(name: str, base: str = RECORD_DIR) -> list:
-    """Sorted model stems with precomputed embeddings for a dataset.
-
-    A stem is the on-disk filename minus the ``_left.npy`` suffix (it starts
-    with the embedding-model name, e.g. ``Qwen_Qwen3-Embedding-4B``); only
-    models with both sides present count.
-    """
-    d = os.path.join(base, name)
-    stems = sorted(os.path.basename(p)[:-len("_left.npy")]
-                   for p in glob.glob(os.path.join(d, "*_left.npy")))
-    return [s for s in stems
-            if os.path.exists(os.path.join(d, f"{s}_right.npy"))]
-
 
 def load_embeddings(name: str, model: str, data,
                     base: str = RECORD_DIR) -> Tuple[np.ndarray, np.ndarray]:

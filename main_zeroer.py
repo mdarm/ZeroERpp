@@ -1,9 +1,4 @@
-"""Publication replication, editable unsupervised tuning, and saved prediction.
-
-The publication ``match`` command keeps the frozen protocol. For new searches,
-edit configs/unsupervised.json and use ``tune``; its stages expose the complete
-search -> refinement -> NLL selection -> refit -> prediction/evaluation path.
-"""
+"""Replicate the frozen ZeroER++ blocking and unsupervised experiments."""
 import argparse
 from collections import Counter
 from datetime import datetime, timezone
@@ -46,7 +41,6 @@ def _parser():
     prepare = command("prepare", "regenerate candidate, similarity and string-feature caches", scope=True,
                       models=True, panels=True)
     prepare.add_argument("--workers", type=int, default=1, help="string-feature extraction workers")
-    prepare.add_argument("--config", help="prepare only the embedding inputs of a custom tuning JSON design")
     blocking = command("blocking", "run the frozen record-embedding blocking grid", models=True)
     blocking.add_argument("--datasets", nargs="+")
     blocking.add_argument("--k-max", type=int, default=100)
@@ -55,33 +49,12 @@ def _parser():
                     scope=True, panels=True)
     match.add_argument("--workers", type=int, default=1, help="independent cell/panel workers")
     match.add_argument("--no-ablations", action="store_true", help="omit MiniLM6 zero-fill/hard-EM ablations")
-    tune = command("tune", "run an editable unsupervised grid and its post-selection stages")
-    tune.add_argument("--config", required=True, help="JSON design, e.g. configs/unsupervised.json")
-    tune.add_argument("--stage", choices=("search", "refine", "refit", "report", "all"), default="all",
-                      help="run a stage explicitly, or the full search/refinement/refit chain")
-    tune.add_argument("--workers", type=int, default=1, help="independent cell/panel workers")
-    tune.add_argument("--prepare", action="store_true", help="prepare candidate/similarity inputs first")
-    tune.add_argument("--evaluate", action="store_true",
-                      help="after refitting, read gold for metrics/oracles; never used for NLL selection")
-    tune.epilog = ("Edit the JSON grids, then run tune --config configs/unsupervised.json --prepare. "
-                   "Stages can also run individually in order: search, refine, refit. "
-                   "Each stage exports trials and selections under OUTPUT_DIR/tuning/EXPERIMENT. "
-                   "Set --evaluate on the first refit if metrics are wanted. "
-                   "Changed designs or refit policies require a new experiment/output directory.")
-    predict = command("predict", "restore a fitted predictor and decode candidates without labels")
-    predict.add_argument("--predictor", required=True, help="saved predictor .pkl from a tuning refit")
-    predict.add_argument("--dataset", required=True)
-    predict.add_argument("--side", choices=("left", "right"), required=True)
-    predict.add_argument("--k", type=int, required=True)
-    predict.add_argument("--score", choices=("llr", "posterior"), default="llr")
-    predict.add_argument("--decoder", choices=("threshold", "greedy"), default="greedy")
-    predict.add_argument("--threshold", type=float, help="inclusive cut (default: LLR 0, posterior 0.5)")
-    predict.add_argument("--no-cut", action="store_true", help="greedy matching without a score cut")
-    predict.add_argument("--predictions", help="output Parquet path (default: OUTPUT_DIR/predictions.parquet)")
     command("baselines", "fit original B-paper and B-code on identical candidates", scope=True)
     timings = command("timings", "rerun the published serial timing protocol", scope=True, panels=True)
-    timings.add_argument("--kind", choices=("published", "selected", "cosine", "strings"), default="published",
-                         help="strings measures only the published Fodors-Zagats right/k1 cell")
+    timings.add_argument("--kind", choices=("published", "selected", "cosine", "strings", "features"),
+                         default="published",
+                         help="strings measures only the published Fodors-Zagats right/k1 cell; "
+                              "features times fresh Magellan features on every selected cell")
     timings.add_argument("--repeats", type=int, default=3, help="selected-fit and direct-cosine repetitions")
     timings.add_argument("--string-repeats", type=int, default=1)
     report = command("report", "export tables and compare generated results to the frozen references")
@@ -92,33 +65,6 @@ def _parser():
 
 def _design(args):
     from exp import config, protocol
-    if args.command == "tune" or (args.command == "prepare" and args.config):
-        from exp.tuning_config import load_tuning_plan
-        if args.command == "prepare" and (args.datasets or args.models or args.panels or args.scope != "all"):
-            raise ValueError("With --config, candidate cells and panels come from the JSON design")
-        plan = load_tuning_plan(args.config)
-        args.tuning_plan = plan
-        if args.command == "tune":
-            if args.stage == "refine" and not plan.refinements:
-                raise ValueError("The design has no refinement grid")
-            if args.evaluate and args.stage not in ("all", "refit"):
-                raise ValueError("--evaluate applies only to the refit/all stage")
-        return dict(command=args.command, data_dir=config.BENCH_DIR, output_dir=config.OUTPUT_DIR,
-                    **plan.to_dict(), models=plan.models, selected_studies=len(plan.cells) * len(plan.panels),
-                    initial_configurations=len(plan.configurations), additional_configurations=len(plan.refinements))
-    if args.command == "predict":
-        import math
-        if args.dataset not in protocol.DATASETS or args.k < 1:
-            raise ValueError("Prediction requires a known dataset and a positive k")
-        if args.no_cut and args.decoder != "greedy":
-            raise ValueError("--no-cut requires greedy decoding")
-        if args.threshold is None:
-            args.threshold = 0.0 if args.score == "llr" else 0.5
-        if not math.isfinite(args.threshold):
-            raise ValueError("Prediction threshold must be finite; use --no-cut for greedy without a cut")
-        return dict(command="predict", data_dir=config.BENCH_DIR, output_dir=config.OUTPUT_DIR,
-                    dataset=args.dataset, side=args.side, k=args.k, predictor=args.predictor,
-                    score=args.score, decoder=args.decoder, threshold=None if args.no_cut else args.threshold)
     datasets = getattr(args, "datasets", None) or protocol.DATASETS
     unknown = set(datasets) - set(protocol.DATASETS)
     if unknown:
@@ -229,38 +175,6 @@ def _run_baselines(args, design):
                   status="finished_with_failed_fits" if failures else "finished"))
 
 
-def _run_tuning(args):
-    from data.prepare import prepare_inputs
-    from exp import config
-    from exp.tuning import run_tuning
-    plan = args.tuning_plan
-    if args.prepare:
-        prepare_inputs(cells=plan.cells, models=plan.models, include_strings=False)
-    result = run_tuning(plan, config.UNSUPERVISED_STORAGE, config.OUTPUT_DIR,
-                        stage=args.stage, workers=args.workers, evaluate=args.evaluate)
-    print(json.dumps(result, indent=2, sort_keys=True))
-
-
-def _run_prediction(args):
-    from data.features.panels import load_cell
-    from exp.config import OUTPUT_DIR
-    from models.estimator import ZeroEREstimator
-    predictor = ZeroEREstimator.load(args.predictor)
-    panel = predictor.panel
-    cell = load_cell(args.dataset, args.side, args.k, panel["models"],
-                     metrics=panel.get("metrics", ["cos"]), include_record=panel.get("include_record", True))
-    scores = predictor.score(cell["bank"], cell["present"])
-    keep = predictor.predict(cell["pairs"], cell["bank"], cell["present"],
-                             score=args.score, decoder=args.decoder,
-                             threshold=None if args.no_cut else args.threshold)
-    output = cell["ids"].assign(llr=scores["llr"], p_match=scores["p_match"], match=keep)
-    path = Path(args.predictions) if args.predictions else Path(OUTPUT_DIR) / "predictions.parquet"
-    path.parent.mkdir(parents=True, exist_ok=True)
-    output.to_parquet(path, index=False)
-    print(json.dumps(dict(predictions=str(path), candidates=len(output), matches=int(keep.sum()),
-                          labels_used=False, model_refitted=False), indent=2))
-
-
 def _run_timings(args, design):
     import optuna
     from exp import config, protocol
@@ -305,6 +219,36 @@ def _run_timings(args, design):
                   timing_scope="serial matching only; embedding generation and blocking excluded"))
 
 
+def _run_feature_timings(args, design):
+    import pandas as pd
+    from exp import config
+    from exp.baseline_timing import benchmark_baseline_cell
+    rows = []
+    for dataset, side, k in design["cells"]:
+        frame = benchmark_baseline_cell(dataset, side, k, config.FEATURE_TIMING_STORAGE,
+                                        repeats=args.string_repeats, n_jobs=1, allow_expensive=True)
+        # Loading, preprocessing and feature costs are shared by both baselines and all rules.
+        shared = frame.drop_duplicates("repeat")
+        fits = frame.drop_duplicates(["baseline", "repeat"]).groupby("baseline").fit_seconds.median()
+        metadata = json.loads(frame.metadata_json.iloc[0])
+        rows.append(dict(dataset=dataset, side=side, k=k, n_pairs=metadata["n_pairs"],
+                         n_features=metadata["n_features"], repeats=len(shared),
+                         loading_seconds=shared.loading_seconds.median(),
+                         preprocessing_seconds=shared.preprocessing_seconds.median(),
+                         feature_seconds=shared.similarity_seconds.median(),
+                         feature_seconds_min=shared.similarity_seconds.min(),
+                         feature_seconds_max=shared.similarity_seconds.max(),
+                         b_paper_fit_seconds=fits["B-paper"], b_code_fit_seconds=fits["B-code"]))
+        print("{} {}/{}: {:.1f}s for {} pairs".format(
+            dataset, side, k, rows[-1]["feature_seconds"], rows[-1]["n_pairs"]), flush=True)
+    table = Path(config.OUTPUT_DIR) / "magellan_feature_timings.csv"
+    pd.DataFrame(rows).to_csv(table, index=False, float_format="%.17g")
+    _save_summary("feature_timing_run_summary", dict(design=design, storage=config.FEATURE_TIMING_STORAGE,
+                  table=str(table), string_repeats=args.string_repeats, n_jobs=1,
+                  timing_scope="serial fresh Magellan features on blocked candidates, checked against "
+                               "the prepared cache, plus B-paper/B-code fits; blocking excluded"))
+
+
 def main(argv=None):
     parser = _parser()
     args = parser.parse_args(argv)
@@ -337,11 +281,7 @@ def main(argv=None):
         print(json.dumps(result, indent=2))
     elif args.command == "prepare":
         from data.prepare import prepare_inputs
-        if args.config:
-            prepare_inputs(cells=args.tuning_plan.cells, models=args.tuning_plan.models,
-                           n_jobs=args.workers, include_strings=False)
-        else:
-            prepare_inputs(scope=args.scope, datasets=design["datasets"], models=design["models"], n_jobs=args.workers)
+        prepare_inputs(scope=args.scope, datasets=design["datasets"], models=design["models"], n_jobs=args.workers)
     else:
         Path(config.OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
         import optuna
@@ -353,12 +293,10 @@ def main(argv=None):
                                    models=design["models"])
         elif args.command == "match":
             _run_match(args, design)
-        elif args.command == "tune":
-            _run_tuning(args)
-        elif args.command == "predict":
-            _run_prediction(args)
         elif args.command == "baselines":
             _run_baselines(args, design)
+        elif args.command == "timings" and args.kind == "features":
+            _run_feature_timings(args, design)
         elif args.command == "timings":
             _run_timings(args, design)
         elif args.command == "report":
@@ -375,6 +313,10 @@ def main(argv=None):
                                 compare_reference=args.compare_reference,
                                 reference_dir=Path(config.ROOT_DIR) / "results" / "reference")
             print(json.dumps(result, indent=2, default=str))
+            if args.compare_reference:
+                passed = (result["reference_comparison"]["passed"] if args.blocking_only
+                          else result["complete_replication_verified"])
+                return 0 if passed else 1
     return 0
 
 

@@ -4,15 +4,11 @@ Run from the repository root with Docker and Make installed.
 
 1. Build the environment: `make init`.
 2. Download the datasets and embeddings: `make run_module module="python main_zeroer.py download"`.
-3. Reproduce the results: `make run_module module="bash scripts/reproduce.sh"`.
 
 The download contains 975 files (~68 GB) from fixed dataset versions, including precomputed
-numerical representations of text (embeddings). `reproduce.sh` checks the inputs,
-selects possible record pairs to compare (blocking), computes similarity measurements
-(features), runs the matching methods, measures runtimes, and compares results with
-`results/reference/`.
+numerical representations of text (embeddings).
 
-To run the stages separately, in order:
+Recreate blocking, unsupervised selection, and matching results:
 
 ```bash
 make run_module module="python main_zeroer.py verify-data"
@@ -21,10 +17,22 @@ make run_module module="bash scripts/blocking.sh"
 make run_module module="bash scripts/primary.sh"
 make run_module module="bash scripts/sensitivity.sh"
 make run_module module="bash scripts/baselines.sh"
+make run_module module="python main_zeroer.py report"
+```
+
+`primary.sh` and `sensitivity.sh` include hyperparameter selection, full-data refits,
+and matching evaluation. The report command exports the accuracy tables.
+
+Measure runtimes after the results above, then verify the complete reproduction:
+
+```bash
 make run_module module="bash scripts/timings.sh"
 make run_module module="bash scripts/feature_timings.sh"
 make run_module module="bash scripts/report.sh"
 ```
+
+The final report compares results and timing coverage with `results/reference/`.
+To run both groups in one pass: `make run_module module="bash scripts/reproduce.sh"`.
 
 Outputs are saved under `results/runs/`: experiment databases, generated features,
 `reports/`, and `magellan_feature_timings.csv`. Completed work resumes with the same

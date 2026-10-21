@@ -419,6 +419,8 @@ def compare_reports(reports, reference_dir):
 def report(database, output_dir, *, blocking_database=None, compare_reference=False, reference_dir=None):
     """Write deterministic CSV reports and a curve figure; never change a DB."""
     database, output_dir = Path(database), Path(output_dir)
+    summary_path = output_dir / "report.json"
+    summary_path.unlink(missing_ok=True)
     if not database.is_file():
         raise FileNotFoundError("Run matching experiments first: " + str(database))
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -451,7 +453,8 @@ def report(database, output_dir, *, blocking_database=None, compare_reference=Fa
         figure.savefig(output_dir / "primary_thresholds.png", dpi=180, facecolor="white")
         plt.close(figure)
     summary = {"coverage": reports["coverage"].to_dict("records"), "metric_audit": audit,
-        "threshold_cells_available": len(curves), "complete_replication_verified": False,
+        "threshold_cells_available": len(curves), "metrics_replication_verified": False,
+        "blocking_replication_verified": False, "complete_replication_verified": False,
         "interpretation": "Gold-scored development comparisons; NLL selects configurations only within panels."}
     fixed_summary = reports["primary_fixed_summary"]
     if not fixed_summary.empty and fixed_summary.complete_coverage.any():
@@ -463,12 +466,16 @@ def report(database, output_dir, *, blocking_database=None, compare_reference=Fa
             if compare_reference else None)
     if compare_reference:
         reference_dir = reference_dir or Path(__file__).resolve().parents[1] / "results" / "reference"
-        summary["reference_comparison"] = compare_reports(reports, reference_dir)
-        summary["metrics_replication_verified"] = True
+        try:
+            summary["reference_comparison"] = compare_reports(reports, reference_dir)
+        except AssertionError as error:
+            summary["reference_comparison"] = {"passed": False, "error": str(error)}
+        summary["metrics_replication_verified"] = summary["reference_comparison"]["passed"]
         summary["blocking_replication_verified"] = summary.get("blocking", {}).get("reference_comparison", {}).get("passed", False)
-        summary["complete_replication_verified"] = (summary["reference_comparison"]["timing_coverage"]["status"] == "complete"
+        summary["complete_replication_verified"] = (summary["metrics_replication_verified"]
+            and summary["reference_comparison"].get("timing_coverage", {}).get("status") == "complete"
             and len(curves) == len(PRIMARY_CELLS) and summary["blocking_replication_verified"])
-    (output_dir / "report.json").write_text(json.dumps(summary, indent=2, allow_nan=False) + "\n")
+    summary_path.write_text(json.dumps(summary, indent=2, allow_nan=False) + "\n")
     return summary
 
 
@@ -557,9 +564,12 @@ def read_blocking(database):
 
 def report_blocking(database, output_dir, reference_dir=None):
     """Rebuild minimum-cost PC>=.90 operating points and the blocker ranking."""
+    output_dir = Path(output_dir)
+    summary_path = output_dir / "report.json"
+    summary_path.unlink(missing_ok=True)
     frames = read_blocking(database)
     for name, frame in frames.items():
-        _write_csv(frame, Path(output_dir) / (name + ".csv.gz" if name == "trials" else name + ".csv"))
+        _write_csv(frame, output_dir / (name + ".csv.gz" if name == "trials" else name + ".csv"))
     trials = frames["trials"]
     keys = ["dataset", "embedding_model", "side", "k"]
     if trials.duplicated(keys).any():
@@ -572,15 +582,19 @@ def report_blocking(database, output_dir, reference_dir=None):
                 ranking_uses_gold=True, fixed_matching_blocker=MODEL)
     if reference_dir is not None:
         expected = pd.read_csv(Path(reference_dir) / "blocking_trials.csv.gz")
-        if len(trials) != len(expected):
-            raise AssertionError("Blocking comparison requires all 20,000 trials; available {}".format(len(trials)))
-        actual = trials.sort_values(keys).reset_index(drop=True)
-        expected = expected.sort_values(keys).reset_index(drop=True)
-        pd.testing.assert_frame_equal(actual[keys], expected[keys], check_dtype=False)
-        columns = ["candidates", "gold_in_candidates", "gold_pairs"]
-        np.testing.assert_array_equal(actual[columns], expected[columns])
-        np.testing.assert_allclose(actual[["PC", "PQ"]], expected[["PC", "PQ"]], rtol=0, atol=1e-12)
-        result["reference_comparison"] = {"passed": True, "counts": "exact", "metric_atol": 1e-12}
+        try:
+            if len(trials) != len(expected):
+                raise AssertionError("Blocking comparison requires all 20,000 trials; available {}".format(len(trials)))
+            actual = trials.sort_values(keys).reset_index(drop=True)
+            expected = expected.sort_values(keys).reset_index(drop=True)
+            pd.testing.assert_frame_equal(actual[keys], expected[keys], check_dtype=False)
+            columns = ["candidates", "gold_in_candidates", "gold_pairs"]
+            np.testing.assert_array_equal(actual[columns], expected[columns])
+            np.testing.assert_allclose(actual[["PC", "PQ"]], expected[["PC", "PQ"]], rtol=0, atol=1e-12)
+            result["reference_comparison"] = {"passed": True, "counts": "exact", "metric_atol": 1e-12}
+        except AssertionError as error:
+            result["reference_comparison"] = {"passed": False, "error": str(error)}
+    summary_path.write_text(json.dumps(result, indent=2, allow_nan=False) + "\n")
     return result
 
 

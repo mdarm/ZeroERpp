@@ -1,7 +1,7 @@
 # ZeroER++
 
 Publication code for blocking, unsupervised selection, and matching across five
-datasets, twenty embedding models, and 22 candidate sets.
+datasets, and twenty embedding models.
 
 ## Run the experiments
 

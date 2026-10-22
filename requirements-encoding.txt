@@ -1,0 +1,9 @@
+# Optional fresh embedding generation; install alongside requirements.txt.
+# The original Kaggle notebooks did not record package versions. This is not
+# a historical environment lock. Every new run records installed versions.
+torch
+transformers
+sentence-transformers
+accelerate
+sentencepiece
+protobuf

@@ -347,8 +347,8 @@ def compare_reports(reports, reference_dir):
                   panel_table=reports["panel_table"])
     specifications = {
         "fit_configs": (CELL + ["panel_name", "phase", "role", "selection", "baseline"],
-                        ["state", "params_json", "candset_size", "tp_blocking", "n_gold"]),
-        "selection_configs": (CELL + ["panel_name"], ["choice_status", "params_json"]),
+                        ["state", "params_json", "source_validation_nll", "candset_size", "tp_blocking", "n_gold"]),
+        "selection_configs": (CELL + ["panel_name"], ["choice_status", "params_json", "cv_validation_nll"]),
         "decision_counts": (DECISION_KEY, ["uses_gold", "tp", "predicted", "n_gold", "precision", "recall", "f1"]),
         "experiment_table": (["scope", "section", "experiment_label"], list(DATASET_CODES.values())),
         "panel_table": (["panel_name"], list(DATASET_CODES.values())),
@@ -391,7 +391,8 @@ def compare_reports(reports, reference_dir):
                 a = pd.to_numeric(actual[column], errors="coerce").to_numpy()
                 b = pd.to_numeric(reference[column], errors="coerce").to_numpy()
                 # Integer counts must agree exactly; tolerance only covers CSV float roundoff.
-                atol = 1e-12 if column in ("precision", "recall", "f1", *DATASET_CODES.values()) else 0
+                atol = 1e-12 if column in ("precision", "recall", "f1", "source_validation_nll",
+                                          "cv_validation_nll", *DATASET_CODES.values()) else 0
                 np.testing.assert_allclose(a, b, rtol=0, atol=atol, equal_nan=True,
                                            err_msg=name + ": " + column)
         checked.append(dict(table=name, rows=len(actual)))
@@ -432,6 +433,12 @@ def report(database, output_dir, *, blocking_database=None, compare_reference=Fa
     diagnostics = candidate_diagnostics(database, reports["trials"])
     reports["candidate_diagnostics"] = diagnostics
     reports.update(publication_tables(reports["decisions"], diagnostics))
+    from utils.publication_diagnostics import publication_diagnostics
+    from utils.stage_timings import stage_timing_reports
+    from utils.search_audit import search_trial_frame
+    reports.update(publication_diagnostics(database, sources["trials"], sources["decisions"]))
+    reports.update(stage_timing_reports(database.parent / "magellan_timings.db", expected_trials=sources["trials"]))
+    reports["search_trials"] = search_trial_frame(sources["trials"])
     # Compact exports retain the decision counts needed to independently audit
     # every summary; verbose timing repetitions remain in the experiment DB.
     skip = {"decisions", "primary_decisions", "practical", "primary_practical", "oracles", "primary_oracles",
@@ -455,7 +462,21 @@ def report(database, output_dir, *, blocking_database=None, compare_reference=Fa
     summary = {"coverage": reports["coverage"].to_dict("records"), "metric_audit": audit,
         "threshold_cells_available": len(curves), "metrics_replication_verified": False,
         "blocking_replication_verified": False, "complete_replication_verified": False,
+        "replication_scope": "Published CSVs and released embeddings; search, matching, diagnostics and timing coverage. "
+                             "Fresh encoder inference and historical wall-time equality are not verified.",
         "interpretation": "Gold-scored development comparisons; NLL selects configurations only within panels."}
+    diagnostic_availability = reports["publication_diagnostic_availability"]
+    summary["publication_diagnostics"] = {
+        "available": int(diagnostic_availability.available.sum()),
+        "expected": len(diagnostic_availability),
+        "complete": bool(diagnostic_availability.available.all()),
+    }
+    feature_coverage = reports["feature_timing_coverage"]
+    summary["feature_timing_coverage"] = {
+        "complete_cells": int(feature_coverage.status.eq("complete").sum()),
+        "expected_cells": len(feature_coverage),
+        "complete": bool(feature_coverage.status.eq("complete").all()),
+    }
     fixed_summary = reports["primary_fixed_summary"]
     if not fixed_summary.empty and fixed_summary.complete_coverage.any():
         summary["best_shared_primary_rule"] = fixed_summary.loc[fixed_summary.complete_coverage,
@@ -471,9 +492,24 @@ def report(database, output_dir, *, blocking_database=None, compare_reference=Fa
         except AssertionError as error:
             summary["reference_comparison"] = {"passed": False, "error": str(error)}
         summary["metrics_replication_verified"] = summary["reference_comparison"]["passed"]
+        from utils.search_audit import compare_search_trials
+        try:
+            summary["search_reference_comparison"] = compare_search_trials(
+                reports["search_trials"], Path(__file__).resolve().parents[1] / "data" / "search-reference.csv.gz")
+        except AssertionError as error:
+            summary["search_reference_comparison"] = {"passed": False, "error": str(error)}
+        from utils.publication_diagnostics import compare_publication_diagnostics
+        try:
+            summary["diagnostic_reference_comparison"] = compare_publication_diagnostics(reports)
+        except AssertionError as error:
+            summary["diagnostic_reference_comparison"] = {"passed": False, "error": str(error)}
         summary["blocking_replication_verified"] = summary.get("blocking", {}).get("reference_comparison", {}).get("passed", False)
         summary["complete_replication_verified"] = (summary["metrics_replication_verified"]
             and summary["reference_comparison"].get("timing_coverage", {}).get("status") == "complete"
+            and summary["search_reference_comparison"]["passed"]
+            and summary["diagnostic_reference_comparison"]["passed"]
+            and summary["publication_diagnostics"]["complete"]
+            and summary["feature_timing_coverage"]["complete"]
             and len(curves) == len(PRIMARY_CELLS) and summary["blocking_replication_verified"])
     summary_path.write_text(json.dumps(summary, indent=2, allow_nan=False) + "\n")
     return summary
@@ -536,12 +572,16 @@ def read_blocking(database):
                 max(CASE WHEN s.used_for_ranking THEN o.rank END) AS worst_rank,
                 sum(s.used_for_ranking AND o.rank=1) AS wins,
                 round(avg(o.PQ),4) AS mean_PQ,
+                sum(CASE WHEN s.used_for_ranking THEN o.candidates END) AS ranked_candidate_sum,
                 sum(o.candidates IS NULL) AS misses
             FROM blocker_operating_evidence o JOIN blocker_ranking_scope s USING (dataset)
             GROUP BY o.embedding_model
             ORDER BY mean_rank IS NULL, mean_rank, worst_rank, mean_PQ DESC, o.embedding_model
         """, blocking_evidence_db)
         blocker_scope = pd.read_sql_query("SELECT * FROM blocker_ranking_scope ORDER BY dataset", blocking_evidence_db)
+        blocker_operating_points = pd.read_sql_query(
+            "SELECT * FROM blocker_operating_evidence ORDER BY dataset, candidates, PQ DESC, embedding_model",
+            blocking_evidence_db)
         blocker_primary_points = pd.read_sql_query("""
             SELECT dataset, side, k, candidates, gold_in_candidates, gold_pairs, PC, PQ
             FROM blocker_operating_evidence WHERE embedding_model=? ORDER BY dataset
@@ -559,6 +599,7 @@ def read_blocking(database):
     blocker_ranking["chosen_blocker"] = blocker_ranking.embedding_model.eq(MODEL)
 
     return dict(trials=blocker_trials, ranking=blocker_ranking, scope=blocker_scope,
+                operating_points=blocker_operating_points,
                 primary_points=blocker_primary_points, sensitivity_points=blocker_ladder_points)
 
 
@@ -582,6 +623,16 @@ def report_blocking(database, output_dir, reference_dir=None):
                 ranking_uses_gold=True, fixed_matching_blocker=MODEL)
     if reference_dir is not None:
         expected = pd.read_csv(Path(reference_dir) / "blocking_trials.csv.gz")
+        compared = trials.merge(expected, on=keys, how="outer", suffixes=("", "_reference"),
+                                indicator=True, validate="one_to_one")
+        count_columns = ["candidates", "gold_in_candidates", "gold_pairs"]
+        differs = compared._merge.ne("both")
+        for column in count_columns:
+            differs |= compared[column].ne(compared[column + "_reference"])
+        differences = compared.loc[differs, keys + ["_merge"] + count_columns
+                                   + [name + "_reference" for name in count_columns]]
+        _write_csv(differences, output_dir / "reference_differences.csv")
+        result["reference_differences"] = len(differences)
         try:
             if len(trials) != len(expected):
                 raise AssertionError("Blocking comparison requires all 20,000 trials; available {}".format(len(trials)))

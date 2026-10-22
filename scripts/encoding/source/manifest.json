@@ -1,0 +1,19 @@
+{
+  "description": "Original code cells retained verbatim; outputs, execution counts and widget state removed. Checkpoint revisions and package versions were not recorded.",
+  "notebooks": {
+    "gpu-heavy-final.ipynb": {
+      "original_path": "ZeroER/datasets/embeddings/gpu-heavy-final.ipynb",
+      "original_sha256": "2971f3c0361a79260c2756112713164f9537a8e9f813b408e5fd17fdd09b8131",
+      "archived_sha256": "79780d9547f5c76362922bf27d4a26276545a01d471a73bc033e70df23dbcdca",
+      "hardware_metadata": "nvidiaRtxPro6000",
+      "python_version": "3.12.13"
+    },
+    "small-llm-encoding.ipynb": {
+      "original_path": "ZeroER/datasets/embeddings/small-llm-encoding.ipynb",
+      "original_sha256": "fffdfb6f8f9b529018e6ab4e07378596b9aa62debed4bf4dd268047005fe7d5a",
+      "archived_sha256": "5c3ecfd98db5f543022cea3fff8f4ef6c9a2a3505fc11e678df4c2f55e791bf4",
+      "hardware_metadata": "nvidiaTeslaT4",
+      "python_version": "3.12.13"
+    }
+  }
+}

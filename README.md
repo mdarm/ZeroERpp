@@ -1,77 +1,63 @@
 # ZeroER++
 
-Run from the repository root with Docker and Make installed.
+Publication code for blocking, unsupervised selection, and matching across five
+datasets, twenty embedding models, and 22 candidate sets.
 
-1. Build the environment: `make init`.
-2. Download the datasets and embeddings: `make run_module module="python main_zeroer.py download"`.
+## Run the experiments
 
-The download contains 975 files (~68 GB) from fixed dataset versions, including precomputed
-numerical representations of text (embeddings).
-
-Recreate blocking, unsupervised selection, and matching results:
+Run from the repository root with Docker and Make installed. The download contains
+975 files (~68 GB), including the frozen embeddings.
 
 ```bash
-make run_module module="python main_zeroer.py verify-data"
-make run_module module="python main_zeroer.py prepare"
-make run_module module="bash scripts/blocking.sh"
-make run_module module="bash scripts/primary.sh"
-make run_module module="bash scripts/sensitivity.sh"
-make run_module module="bash scripts/baselines.sh"
-make run_module module="python main_zeroer.py report"
+make init
+make run_module module="python main_zeroer.py download"
+make run_module module="bash scripts/reproduce.sh"
 ```
 
-`primary.sh` and `sensitivity.sh` include hyperparameter selection, full-data refits,
-and matching evaluation. The report command exports the accuracy tables.
+This verifies inputs, prepares features, runs blocking, hyperparameter selection,
+matching and timings, then exports and checks the publication results. Outputs are
+saved in `results/runs/`. Individual stages are available in `scripts/`.
 
-Measure runtimes after the results above, then verify the complete reproduction:
+## Rerun the Optuna studies
+
+Each study evaluates ten configurations using three record-disjoint splits and
+validation negative log-likelihood. The selected configuration is refitted on all
+candidates. The grid is defined in [exp/protocol.py](exp/protocol.py).
+
+The same output directory resumes completed work. To repeat the studies, use a new
+directory for both preparation and matching:
 
 ```bash
-make run_module module="bash scripts/timings.sh"
-make run_module module="bash scripts/feature_timings.sh"
-make run_module module="bash scripts/report.sh"
+make run_module module="python main_zeroer.py prepare --output-dir results/rerun"
+make run_module module="python main_zeroer.py match --workers 4 --output-dir results/rerun"
 ```
 
-The final report compares results and timing coverage with `results/reference/`.
-To run both groups in one pass: `make run_module module="bash scripts/reproduce.sh"`.
+## Regenerate embeddings (optional)
 
-Outputs are saved under `results/runs/`: experiment databases, generated features,
-`reports/`, and `magellan_feature_timings.csv`. Completed work resumes with the same
-code and inputs; after code changes, use a fresh `--output-dir`.
+In a separate Python environment with suitable GPUs:
 
-The experiments use five datasets and twenty embedding models. Matching is evaluated
-on 22 candidate-pair sets (each defined by the dataset, the table supplying search
-queries, and the number of nearest neighbours retained per record): five for the main
-comparison and nineteen for sensitivity analysis, with two sets shared.
+```bash
+python -m pip install -r requirements.txt -r requirements-encoding.txt
+python -m data.encoding --data-dir data/benchmarks --output-dir results/regenerated-inputs
+```
 
-For each candidate set, we evaluate 27 feature configurations: twenty individual
-embedding models and seven combinations. Hyperparameters are selected within each
-feature configuration by minimising marginal validation negative log-likelihood
-(NLL) across three record-disjoint train/validation splits. Reported model rankings
-and exact threshold optima use ground-truth labels; fixed decision rules do not.
+The output directory must not exist. Use `--data-dir results/regenerated-inputs`
+and a fresh `--output-dir` for subsequent preparation and matching. Historical
+checkpoint versions were not pinned, so new vectors may differ; `verify-data`
+checks the frozen inputs. Original recipes are in `scripts/encoding/source/`.
 
-Timings use serial execution with one CPU thread. Each fitted matching method and
-direct cosine-similarity baseline is benchmarked in three repetitions with the same
-inputs; reports use the median runtime to reduce the effect of run-to-run variation.
-The original string baselines are timed once on Fodors–Zagats `right/k1`. A separate
-benchmark times fresh Magellan feature generation once for each of the 22 candidate
-sets. Embedding generation and blocking are excluded from matching times.
+## Verification
 
-Verification compares match counts, chosen settings, and accuracy against the saved
-results. It also checks timing coverage for 593 successful model fits, direct cosine
-comparisons for each of the 22 pair sets, and two original string-based methods (617 in total).
-Runtimes may differ by machine.
+Reports check matching results, all 5,940 search configurations, publication
+diagnostics, and timing coverage against the original artifacts. Expected failed
+fits are retained. Two known ABT–Buy blocking-count differences cause strict
+verification to exit with a failure status after saving `reports/report.json`.
+All 22 candidate sets used for matching agree with the reference.
 
-Some failed fits are expected, including DBLP–ACM when each record in the right table keeps
-twelve nearest neighbours (`right/k12`) and all twenty embedding models contribute
-separate features (`all:separate`). These failures are retained in the saved results.
+Run the tests with
+`make run_module module="python -m unittest discover -s tests"`.
 
-The completed rerun reproduces all matching results. Two ABT–Buy results for selecting
-candidate pairs differ by one known correct pair: `gte_large` with two neighbours per
-record in the right table (`right/k2`), and `st5_xl` with eight (`right/k8`). Strict comparison
-returns a failure exit status for these differences, after saving the tables and
-`reports/report.json`.
-
-Infrastructure used:
+## Infrastructure
 
 - Original experiments: AWS EC2 `g5.4xlarge` (16 vCPUs, 64 GB RAM, NVIDIA A10G 24 GB)
   and `r6i.8xlarge` (32 vCPUs, 256 GB RAM), both running Ubuntu 20.04.6 LTS.

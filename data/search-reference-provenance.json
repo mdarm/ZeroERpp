@@ -1,0 +1,54 @@
+{
+  "comparison": {
+    "atol": 1e-10,
+    "complete_trials_with_unconverged_folds": 607,
+    "failed_trials": 419,
+    "max_absolute_nll_difference": 9.094947017729282e-13,
+    "passed": true,
+    "rtol": 1e-12,
+    "studies": 594,
+    "trials": 5940
+  },
+  "experiment": "unsupervised-refined-v1",
+  "exporter": "utils.search_audit.search_trial_frame",
+  "fields": "Every configuration, state, fold sizes, convergence and validation NLL; timing excluded.",
+  "primary_validation_candidate_coverage": [
+    {
+      "dataset": "abt_buy",
+      "fraction": 0.32978723404255317,
+      "k": 2,
+      "side": "left"
+    },
+    {
+      "dataset": "amazon_googleproducts",
+      "fraction": 0.3360234776228907,
+      "k": 4,
+      "side": "left"
+    },
+    {
+      "dataset": "dblp_acm",
+      "fraction": 0.33958151700087186,
+      "k": 1,
+      "side": "right"
+    },
+    {
+      "dataset": "dblp_scholar",
+      "fraction": 0.3319317023445464,
+      "k": 6,
+      "side": "left"
+    },
+    {
+      "dataset": "fodors_zagats",
+      "fraction": 0.3021148036253776,
+      "k": 1,
+      "side": "right"
+    }
+  ],
+  "reference_sha256": "dd02287cf38da9e853c71e1684234df9f0725e41fec721a947711ca809dc96ea",
+  "source": "October 20, 2026 publication Optuna studies",
+  "source_database": "pyJedAI/ZeroER/outputs/optuna_unsupervised.db",
+  "source_database_bytes": 5992325120,
+  "source_repository_commit": "a169b362e100df7ad1c45f08b313868e20394a2f",
+  "studies": 594,
+  "trials": 5940
+}
